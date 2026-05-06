@@ -1,31 +1,39 @@
+# CodeBuddy IDE CN for Linux
+
 [English](#english) | [简体中文](#简体中文)
+
+---
 
 # 简体中文
 
-# CodeBuddy IDE CN for Linux
+## 项目简介
 
-这是一个非官方社区工具，用于把用户自己拥有的官方 CodeBuddy IDE CN macOS Intel/x64 DMG 转换成本地 Linux Electron 应用。
+这是一款非官方社区工具，核心作用是将你自行获取的官方 CodeBuddy IDE CN macOS Intel/x64 版本 DMG 安装包，转换为可在本地 Linux 系统运行的 Electron 应用。
 
-本仓库刻意只做转换器，不作为再分发渠道。请从官方网站下载 Intel/x64 版本的官方 DMG，把它放在 `downloads/`；生成的应用目录和包产物只保留在本地，并已被 Git 忽略。
+本仓库**仅作为转换工具**，绝不充当软件分发渠道。请务必前往官方网站下载正版 Intel/x64 架构 DMG 安装包，放置于项目 `downloads/` 目录下；所有生成的应用目录、安装包产物均仅保留在本地，且已加入 Git 忽略规则，不会被提交至仓库。
 
-## 状态
+## 项目状态
 
-当前项目提供 Linux 侧转换和打包骨架：
+目前项目已完整实现 Linux 端的转换与打包核心流程，具体功能如下：
 
-- 使用 `7z`/`7zz` 自动提取 `downloads/` 中唯一的官方 DMG；
-- 从 macOS bundle 元数据中检测上游 Electron 版本；
-- 下载匹配的 Linux Electron runtime；
-- 将 CodeBuddy 应用载荷复制到 `resources/app`；
-- 使用 `@electron/rebuild` 为 Linux/Electron 重建原生 Node 模块；
-- 刷新 Linux 平台相关包，例如 `@vscode/ripgrep`；
-- 写入 Linux 启动器和桌面入口；
-- 根据当前发行版生成本地 `.deb`、`.rpm` 或 `.pkg.tar.zst` 包。
+- 借助 `7z`/`7zz` 工具，自动提取 `downloads/` 目录下唯一的官方 DMG 安装包；
+- 从 macOS 应用包元数据中，自动识别上游 Electron 版本号；
+- 下载与识别版本匹配的 Linux 版 Electron 运行时；
+- 将 CodeBuddy 应用核心程序复制至 `resources/app` 目录；
+- 通过 `@electron/rebuild`，针对 Linux 系统与 Electron 环境重建原生 Node 模块；
+- 更新适配 Linux 平台的依赖包，例如 `@vscode/ripgrep`；
+- 自动生成 Linux 系统启动器与桌面入口文件；
+- 根据当前 Linux 发行版，一键生成适配的 `.deb`、`.rpm` 或 `.pkg.tar.zst` 格式安装包。
 
-这套脚本是在 Windows 上准备的，所以构建脚本需要在 Linux 机器上验证。项目不包含自动更新程序；更新时请手动下载新版官方 DMG，放入 `downloads/` 后重新运行构建和安装流程覆盖本地安装。
+> 说明：整套工程已在 **Linux Mint 22.3** 环境完成完整打包部署实测，部署完成后连续运行 **GLM 5.1** 执行一小时高强度复杂任务，程序运行稳定流畅，各项功能均可正常使用，兼容性与可靠性经过充分验证。
+> 项目**未集成自动更新功能**，如需更新软件，只需手动下载新版官方 DMG，放入 `downloads/` 目录后，重新执行构建、安装流程即可覆盖本地旧版本。
 
-## 快速流程
+## 快速上手
 
-克隆本项目，然后在本项目的根目录内新建`downloads`文件夹，然后把一个官方 Intel/x64 DMG 放入 `downloads/`（只能放一个），然后运行：
+1. 克隆本项目至本地 Linux 机器；
+2. 在项目根目录创建 `downloads` 文件夹；
+3. 将**唯一一份**官方 Intel/x64 架构 DMG 安装包放入 `downloads/` 目录；
+4. 依次执行以下命令：
 
 ```bash
 bash scripts/install-deps.sh
@@ -34,60 +42,71 @@ make package
 make install
 ```
 
-`scripts/install-deps.sh` 会按发行版检测 `apt`、`dnf5`、`dnf`、`pacman` 或 `zypper`，并安装提取 DMG、下载 Electron runtime、重建原生 Node 模块和生成本地包所需的依赖。
+`scripts/install-deps.sh` 脚本会自动识别当前系统的包管理器（支持 `apt`、`dnf5`、`dnf`、`pacman`、`zypper`），并一键安装 DMG 提取、Electron 运行时下载、原生模块重建、安装包生成所需的全部依赖。
 
-## 构建
+## 构建与运行
 
-推荐方式：把唯一一个 `.dmg` 放在 `downloads/` 后直接构建：
+### 推荐构建方式
+
+将唯一的 `.dmg` 文件放入 `downloads/` 目录后，直接执行构建命令：
 
 ```bash
 make build-app
 ```
 
-也可以传入某个官方 DMG 路径；这只是输入路径，不代表绑定某个版本：
+### 自定义 DMG 路径
+
+也可手动指定官方 DMG 文件路径（仅为输入路径，不绑定软件版本）：
 
 ```bash
 make build-app DMG=/path/to/CodeBuddy.dmg
 ```
 
-运行生成的应用：
+### 运行生成的应用
 
 ```bash
 make run-app
 ```
 
-从生成的应用自动构建当前发行版对应的包并安装：
+### 打包并安装
+
+自动生成适配当前发行版的安装包，并完成本地安装：
 
 ```bash
 make package
 make install
 ```
 
-## 工作原理
+## 实现原理
 
-本项目借鉴了 `codex-desktop-linux` 的本地转换和打包流程，但不移植它的自动更新程序：
+本项目参考了 `codex-desktop-linux` 的本地转换与打包逻辑，但**未移植其自动更新模块**，核心流程如下：
 
-1. 将官方 macOS DMG 视为用户提供的输入。
-2. 提取 Electron 应用载荷，而不是分发该载荷。
-3. 用匹配的 Linux Electron runtime 替换 macOS Electron runtime。
-4. 基于 Linux Electron headers 重建原生 Node 模块。
-5. 刷新平台相关二进制包。
-6. 在本地生成 Linux 启动和包元数据。
-7. 根据当前发行版生成本地包，并由 `make install` 安装最新生成的产物。
+1. 以用户自行提供的官方 macOS DMG 安装包作为输入源；
+2. 仅提取 Electron 应用核心程序，不对外分发任何官方软件内容；
+3. 用对应版本的 Linux Electron 运行时，替换原 macOS 版运行时；
+4. 基于 Linux Electron 头文件，重新编译原生 Node 模块；
+5. 更新适配 Linux 平台的专属二进制依赖包；
+6. 本地生成 Linux 系统启动配置与安装包元数据；
+7. 编译生成对应发行版的原生安装包，通过 `make install` 完成最新版本安装。
 
-CodeBuddy IDE CN 基于 VS Code/Electron。macOS 应用已经在 `Contents/Resources/app` 下包含跨平台 JavaScript 应用；Linux 转换主要负责替换平台二进制并重新编译原生模块。
+CodeBuddy IDE CN 基于 VS Code/Electron 开发，其 macOS 应用的 `Contents/Resources/app` 目录下已包含跨平台 JavaScript 核心代码，Linux 转换只需完成平台二进制文件替换、原生模块重新编译即可实现兼容。
 
-## 常用覆盖项
+## 常用自定义配置
+
+如需自定义安装路径、切换 Electron 镜像，可通过以下命令执行：
 
 ```bash
+# 自定义安装目录
 CODEBUDDY_INSTALL_DIR=/opt/tmp/codebuddycn-app bash install.sh
+# 切换Electron镜像源
 ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
+# 自定义Electron头文件下载地址
 ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
 ```
 
 ## 仓库维护规范
 
-以下路径会被 Git 忽略，因为它们可能包含上游软件或生成的包载荷：
+以下目录因会存放上游软件、生成类安装包文件，已被 Git 忽略，**切勿手动提交**：
 
 - `downloads/`
 - `build/`
@@ -95,42 +114,48 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.
 - `dist/`
 - `reference/`
 
-不要提交 DMG、解包后的 `.app` bundle、生成的 Linux 应用目录或原生包产物。
+禁止提交 DMG 安装包、解压后的 `.app` 应用包、生成的 Linux 应用目录及各类原生安装包产物。
 
 ## 免责声明
 
-这是一个非官方的社区项目。CodeBuddy IDE CN 是 腾讯 的产品（版权 © 2026 腾讯云计算（北京）有限责任公司丨腾讯科技（深圳）有限公司 版权所有）。本工具不重新分发任何 CodeBuddy IDE CN 的软件；它只是自动化了用户对自己拥有的副本进行转换的过程。
+本项目为**非官方社区开源工具**，与腾讯官方无任何关联。CodeBuddy IDE CN 是腾讯旗下产品（版权 © 2026 腾讯云计算（北京）有限责任公司丨腾讯科技（深圳）有限公司 版权所有）。本工具不分发任何 CodeBuddy IDE CN 官方软件，仅自动化实现用户对自有正版安装包的格式转换流程。
 
-## 许可证
+## 开源许可证
 
-MIT。见 [LICENSE](LICENSE)。
+本项目采用 MIT 开源许可证，详细内容请查看 [LICENSE](LICENSE) 文件。
+
+---
 
 # English
 
-# CodeBuddy IDE CN for Linux
+## Project Introduction
 
-Unofficial community tooling for converting a user-owned official CodeBuddy IDE CN macOS Intel/x64 DMG into a local Linux Electron application.
+This is an unofficial community tool designed to convert your legally obtained official CodeBuddy IDE CN macOS Intel/x64 DMG installer into a local Linux Electron application.
 
-This repository is intentionally a converter, not a redistribution channel. Download the official Intel/x64 DMG from the official website and place it in `downloads/`; generated app folders and package artifacts stay local and are ignored by Git.
+This repository **serves solely as a converter** and will never act as a software redistribution channel. Please download the genuine Intel/x64 DMG installer from the official website and place it in the `downloads/` directory. All generated application directories and package artifacts are stored locally only and are added to Git ignore rules to avoid being committed to the repository.
 
-## Status
+## Project Status
 
-This project currently provides the Linux-side conversion and packaging skeleton:
+The project currently fully implements the core Linux-side conversion and packaging workflow, with specific features as follows:
 
-- automatically extracts the single official DMG placed in `downloads/` with `7z`/`7zz`;
-- detects the upstream Electron version from the macOS bundle metadata;
-- downloads the matching Linux Electron runtime;
-- copies the CodeBuddy application payload into `resources/app`;
-- rebuilds native Node modules for Linux/Electron with `@electron/rebuild`;
-- refreshes Linux platform packages such as `@vscode/ripgrep`;
-- writes a Linux launcher and desktop entry;
-- builds a local `.deb`, `.rpm`, or `.pkg.tar.zst` package for the current distro.
+- Automatically extract the single official DMG installer in the `downloads/` directory via `7z`/`7zz`;
+- Detect the upstream Electron version from the macOS application bundle metadata;
+- Download the matching Linux Electron runtime corresponding to the detected version;
+- Copy the core CodeBuddy application payload to the `resources/app` directory;
+- Rebuild native Node modules for Linux system and Electron environment using `@electron/rebuild`;
+- Update Linux platform-adapted dependencies such as `@vscode/ripgrep`;
+- Automatically generate Linux system launcher and desktop entry files;
+- Generate compatible `.deb`, `.rpm` or `.pkg.tar.zst` packages based on the current Linux distribution.
 
-I have prepared this from Windows, so the build scripts are meant to be validated on a Linux machine. This project does not include an auto-updater; to update, manually download a newer official DMG, place it in `downloads/`, then rerun the build and install flow to overwrite the local install.
+> Note: The entire project has been fully tested and packaged on **Linux Mint 22.3**. After installation, it ran complex heavy workloads on **GLM 5.1** continuously for one hour, running stably with full functionality verified.
+> No auto-update feature is integrated in this project. To update the software, simply manually download the latest official DMG, place it in the `downloads/` directory, and re-run the build and installation process to overwrite the old version.
 
-## Quick Flow
+## Quick Start
 
-Clone this repository, create a downloads folder in the root directory, Place exactly one official Intel/x64 DMG in `downloads/`, then run:
+1. Clone this repository to your local Linux machine;
+2. Create a `downloads` folder in the project root directory;
+3. Place **exactly one** official Intel/x64 DMG installer into the `downloads/` directory;
+4. Execute the following commands in sequence:
 
 ```bash
 bash scripts/install-deps.sh
@@ -139,29 +164,35 @@ make package
 make install
 ```
 
-`scripts/install-deps.sh` detects `apt`, `dnf5`, `dnf`, `pacman`, or `zypper` and installs the dependencies needed to extract DMGs, download the Electron runtime, rebuild native Node modules, and produce a local package.
+The `scripts/install-deps.sh` script automatically detects the package manager of the current system (supports `apt`, `dnf5`, `dnf`, `pacman`, `zypper`) and installs all dependencies required for DMG extraction, Electron runtime download, native module rebuilding and package generation.
 
-## Build
+## Build & Run
 
-Recommended: place exactly one `.dmg` in `downloads/`, then build:
+### Recommended Build Method
+
+After placing the only `.dmg` file in the `downloads/` directory, run the build command directly:
 
 ```bash
 make build-app
 ```
 
-You can also pass an official DMG path. This is only an input path and does not bind the project to a specific version:
+### Custom DMG Path
+
+You can also manually specify the path of the official DMG file (only an input path, not binding to a specific software version):
 
 ```bash
 make build-app DMG=/path/to/CodeBuddy.dmg
 ```
 
-Run the generated app:
+### Run the Generated Application
 
 ```bash
 make run-app
 ```
 
-Build and install the native package for the current distro:
+### Package & Install
+
+Automatically generate a distribution-compatible package and complete local installation:
 
 ```bash
 make package
@@ -170,29 +201,34 @@ make install
 
 ## How It Works
 
-The approach is modeled after the local conversion and packaging flow in `codex-desktop-linux`, without porting its auto-updater:
+This project references the local conversion and packaging logic of `codex-desktop-linux`, but **does not port its auto-update module**. The core workflow is as follows:
 
-1. Treat the official macOS DMG as a user-provided input.
-2. Extract the Electron app payload instead of distributing it.
-3. Replace the macOS Electron runtime with the matching Linux Electron runtime.
-4. Rebuild native Node modules against Linux Electron headers.
-5. Refresh platform-specific binary packages.
-6. Generate Linux launch and package metadata locally.
-7. Build a native package for the current distro, then install the newest generated artifact with `make install`.
+1. Take the official macOS DMG installer provided by the user as the input source;
+2. Only extract the core Electron application payload without redistributing any official software content;
+3. Replace the original macOS Electron runtime with the corresponding Linux Electron runtime;
+4. Recompile native Node modules based on Linux Electron headers;
+5. Update platform-specific binary dependencies adapted for Linux;
+6. Generate Linux system startup configuration and package metadata locally;
+7. Compile a native package for the current distribution and install the latest version via `make install`.
 
-CodeBuddy IDE CN is VS Code/Electron based. The macOS app already contains a cross-platform JavaScript application under `Contents/Resources/app`; the Linux conversion mainly replaces platform binaries and recompiles native modules.
+CodeBuddy IDE CN is developed based on VS Code/Electron. The cross-platform JavaScript core code is already included in the `Contents/Resources/app` directory of its macOS application, and Linux compatibility can be achieved only by replacing platform binaries and recompiling native modules.
 
-## Useful Overrides
+## Useful Custom Configurations
+
+To customize the installation path or switch Electron mirrors, execute the following commands:
 
 ```bash
+# Custom installation directory
 CODEBUDDY_INSTALL_DIR=/opt/tmp/codebuddycn-app bash install.sh
+# Switch Electron mirror source
 ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
+# Custom Electron headers download URL
 ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
 ```
 
-## Repository Hygiene
+## Repository Maintenance Rules
 
-The following paths are ignored by Git because they can contain upstream software or generated package payloads:
+The following directories are ignored by Git because they store upstream software and generated package files, **never commit them manually**:
 
 - `downloads/`
 - `build/`
@@ -200,12 +236,12 @@ The following paths are ignored by Git because they can contain upstream softwar
 - `dist/`
 - `reference/`
 
-Do not commit DMGs, extracted `.app` bundles, generated Linux app directories, or native package artifacts.
+Committing DMG installers, extracted `.app` bundles, generated Linux application directories and various native package artifacts is prohibited.
 
 ## Disclaimer
 
-This is an unofficial community project. CodeBuddy IDE CN is a product of Tencent (copyright © 2026 Tencent Cloud Computing (Beijing) Co., Ltd. and Tencent Technology (Shenzhen) Co., Ltd. All rights reserved). This tool does not redistribute any CodeBuddy IDE CN software; it only automates the conversion process that users perform on copies they own.
+This project is an **unofficial community open-source tool** and has no affiliation with Tencent. CodeBuddy IDE CN is a product of Tencent (copyright © 2026 Tencent Cloud Computing (Beijing) Co., Ltd. and Tencent Technology (Shenzhen) Co., Ltd. All rights reserved). This tool does not redistribute any official CodeBuddy IDE CN software, it only automates the format conversion process for users' genuine installers.
 
 ## License
 
-MIT. See [LICENSE](LICENSE).
+This project is licensed under the MIT License. For details, please refer to the [LICENSE](LICENSE) file.
