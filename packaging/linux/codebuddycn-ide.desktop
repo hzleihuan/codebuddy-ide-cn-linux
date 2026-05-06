@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=CodeBuddy IDE CN
+Comment=Run CodeBuddy IDE CN on Linux
+Exec=__EXEC__
+Icon=codebuddycn
+Type=Application
+Categories=Development;IDE;
+StartupNotify=true
+StartupWMClass=codebuddycn-ide
+MimeType=x-scheme-handler/codebuddycn;
