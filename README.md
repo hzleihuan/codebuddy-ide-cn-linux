@@ -25,7 +25,7 @@
 
 ## 快速流程
 
-把唯一一个官方 Intel/x64 DMG 放入 `downloads/`，然后运行：
+克隆本项目，然后在本项目的根目录内新建`downloads`文件夹，然后把一个官方 Intel/x64 DMG 放入 `downloads/`（只能放一个），然后运行：
 
 ```bash
 bash scripts/install-deps.sh
@@ -130,7 +130,7 @@ I have prepared this from Windows, so the build scripts are meant to be validate
 
 ## Quick Flow
 
-Place exactly one official Intel/x64 DMG in `downloads/`, then run:
+Clone this repository, create a downloads folder in the root directory, Place exactly one official Intel/x64 DMG in `downloads/`, then run:
 
 ```bash
 bash scripts/install-deps.sh
