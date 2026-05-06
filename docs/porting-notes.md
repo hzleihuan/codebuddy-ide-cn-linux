@@ -13,9 +13,10 @@
 3. 复制或修补应用载荷。
 4. 下载匹配的 Linux Electron runtime。
 5. 为 Linux/Electron 重建原生 Node 模块。
-6. 写入启动器和可选的原生包。
+6. 写入启动器和原生包。
+7. 通过 `install-deps.sh`、`make build-app`、`make package`、`make install` 串起完整本地流程。
 
-重要的法律和工程边界是：生成的载荷是本地产物，不是仓库内容。
+重要的法律和工程边界是：生成的载荷是本地产物，不是仓库内容。本项目只采用本地转换、依赖安装和包构建流程，不移植参考项目的自动更新程序。
 
 ## CodeBuddy 差异
 
@@ -29,15 +30,28 @@
 - VS Code product application name：`buddycn`；
 - URL scheme：`codebuddycn`。
 
+这些值来自当前样本，只用于理解结构；构建脚本会从用户放入 `downloads/` 的官方 DMG 自动读取应用 bundle 和 Electron 版本，不绑定某一个具体 DMG 文件名或版本号。
+
 不同于 Codex 参考项目，这个 bundle 以 `resources/app` 目录形式解包，而不是主要依赖 `app.asar`。因此转换器可以直接把应用载荷复制到 Linux Electron runtime 中。
 
 macOS 载荷里发现的原生模块包括 `node-pty`、`native-keymap`、`native-watchdog`、`@vscode/sqlite3`、`@vscode/spdlog`、`@parcel/watcher`、`kerberos` 和相关可选模块。Linux 构建器会在复制后的应用上运行 `@electron/rebuild`，让这些模块被重建或替换为 Linux 版本。
 
 ## 首次 Linux 验证清单
 
+把唯一一个官方 Intel/x64 DMG 放入 `downloads/`，然后运行：
+
 ```bash
+bash scripts/install-deps.sh
 make check
-make build-app DMG=/path/to/CodeBuddy-darwin-x64-4.9.8.26735874-04507acd-cn.dmg
+make build-app
+make package
+make install
+codebuddycn-ide --verbose
+```
+
+也可以直接运行未安装的生成应用：
+
+```bash
 ./codebuddycn-app/start.sh --verbose
 ```
 
@@ -52,7 +66,7 @@ ldd codebuddycn-app/resources/app/node_modules/native-keymap/build/Release/keyma
 如果原生模块重建失败，可以用下面的方式重试：
 
 ```bash
-ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-app DMG=/path/to/CodeBuddy.dmg
+ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-app
 ```
 
 # English
@@ -68,9 +82,10 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-ap
 3. Copy or patch the app payload.
 4. Download the matching Linux Electron runtime.
 5. Rebuild native Node modules for Linux/Electron.
-6. Write a launcher and optional native packages.
+6. Write a launcher and native packages.
+7. Connect the full local flow through `install-deps.sh`, `make build-app`, `make package`, and `make install`.
 
-The important legal and engineering boundary is that generated payloads are local artifacts, not repository content.
+The important legal and engineering boundary is that generated payloads are local artifacts, not repository content. This project only adopts the local conversion, dependency installation, and package build flow; it does not port the reference project's auto-updater.
 
 ## CodeBuddy Differences
 
@@ -84,15 +99,28 @@ The inspected CodeBuddy IDE CN macOS bundle uses:
 - VS Code product application name: `buddycn`;
 - URL scheme: `codebuddycn`.
 
+These values come from the current sample and are only used to understand the structure. The build scripts read the app bundle and Electron version from the official DMG that the user places in `downloads/`; they are not bound to one specific DMG filename or version.
+
 Unlike the Codex reference, this bundle is unpacked as a `resources/app` directory rather than primarily `app.asar`. That lets the converter copy the app payload directly into the Linux Electron runtime.
 
 Native modules seen in the macOS payload include `node-pty`, `native-keymap`, `native-watchdog`, `@vscode/sqlite3`, `@vscode/spdlog`, `@parcel/watcher`, `kerberos`, and related optional modules. The Linux builder runs `@electron/rebuild` over the copied app so these modules are rebuilt or replaced for Linux.
 
 ## First Linux Validation Checklist
 
+Place exactly one official Intel/x64 DMG in `downloads/`, then run:
+
 ```bash
+bash scripts/install-deps.sh
 make check
-make build-app DMG=/path/to/CodeBuddy-darwin-x64-4.9.8.26735874-04507acd-cn.dmg
+make build-app
+make package
+make install
+codebuddycn-ide --verbose
+```
+
+You can also run the generated app before installing it:
+
+```bash
 ./codebuddycn-app/start.sh --verbose
 ```
 
@@ -107,5 +135,5 @@ ldd codebuddycn-app/resources/app/node_modules/native-keymap/build/Release/keyma
 If native rebuild fails, retry with:
 
 ```bash
-ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-app DMG=/path/to/CodeBuddy.dmg
+ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-app
 ```

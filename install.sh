@@ -23,7 +23,8 @@ usage() {
 Usage: ./install.sh [--fresh] [path/to/CodeBuddy.dmg | path/to/CodeBuddy CN.app]
 
 Builds a local Linux Electron app from a user-owned official CodeBuddy IDE CN
-macOS DMG or extracted .app bundle.
+macOS Intel/x64 DMG or extracted .app bundle. With no path, the installer
+expects exactly one official DMG in downloads/.
 
 Environment:
   CODEBUDDY_INSTALL_DIR   Output app directory (default: ./codebuddycn-app)

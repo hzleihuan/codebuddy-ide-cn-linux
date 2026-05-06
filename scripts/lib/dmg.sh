@@ -11,14 +11,6 @@ resolve_input_path() {
         return 0
     fi
 
-    if [ -d "$SCRIPT_DIR/build/app-extracted" ]; then
-        mapfile -d '' candidates < <(find "$SCRIPT_DIR/build/app-extracted" -maxdepth 4 -name "*.app" -type d -print0 | sort -z)
-        if [ "${#candidates[@]}" -eq 1 ]; then
-            realpath "${candidates[0]}"
-            return 0
-        fi
-    fi
-
     if [ -d "$SCRIPT_DIR/downloads" ]; then
         mapfile -d '' candidates < <(find "$SCRIPT_DIR/downloads" -maxdepth 1 -type f -name "*.dmg" -print0 | sort -z)
         if [ "${#candidates[@]}" -eq 1 ]; then
@@ -27,6 +19,15 @@ resolve_input_path() {
         fi
         if [ "${#candidates[@]}" -gt 1 ]; then
             error "Multiple DMGs found in downloads/. Pass one explicitly."
+        fi
+    fi
+
+    if [ -d "$SCRIPT_DIR/build/app-extracted" ]; then
+        mapfile -d '' candidates < <(find "$SCRIPT_DIR/build/app-extracted" -maxdepth 4 -name "*.app" -type d -print0 | sort -z)
+        if [ "${#candidates[@]}" -eq 1 ]; then
+            warn "No DMG found in downloads/; using already extracted app fallback"
+            realpath "${candidates[0]}"
+            return 0
         fi
     fi
 
