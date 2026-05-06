@@ -85,7 +85,7 @@ ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
 ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
 ```
 
-## 仓库卫生
+## 仓库维护规范
 
 以下路径会被 Git 忽略，因为它们可能包含上游软件或生成的包载荷：
 
