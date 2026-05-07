@@ -6,5 +6,5 @@ Icon=codebuddycn
 Type=Application
 Categories=Development;IDE;
 StartupNotify=true
-StartupWMClass=codebuddycn-ide
+StartupWMClass=CodeBuddy CN
 MimeType=x-scheme-handler/codebuddycn;
