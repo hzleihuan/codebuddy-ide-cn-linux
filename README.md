@@ -84,7 +84,7 @@ make install
 1. 以用户自行提供的官方 macOS DMG 安装包作为输入源；
 2. 仅提取 Electron 应用核心程序，不对外分发任何官方软件内容；
 3. 用对应版本的 Linux Electron 运行时，替换原 macOS 版运行时；
-4. 基于 Linux Electron 头文件，重新编译原生 Node 模块；
+4. **原生模块从源码拉取与重新编译**：由于 macOS DMG 预打包的原生模块（如 `node-pty`）被剥离了 C++ 源码与构建配置（导致直接 `@electron/rebuild` 失败），本工具会自动从 npm 下载对应版本的完整源码，在隔离目录基于 Linux Electron 头文件重新编译为 ELF 二进制文件，再覆盖回应用目录；
 5. 更新适配 Linux 平台的专属二进制依赖包；
 6. 本地生成 Linux 系统启动配置与安装包元数据；
 7. 编译生成对应发行版的原生安装包，通过 `make install` 完成最新版本安装。
@@ -206,7 +206,7 @@ This project references the local conversion and packaging logic of `codex-deskt
 1. Take the official macOS DMG installer provided by the user as the input source;
 2. Only extract the core Electron application payload without redistributing any official software content;
 3. Replace the original macOS Electron runtime with the corresponding Linux Electron runtime;
-4. Recompile native Node modules based on Linux Electron headers;
+4. **Recompile Native Node Modules from Source**: Because pre-packaged native modules (e.g., `node-pty`) in the macOS DMG are stripped of C++ source files and build configurations (which causes direct `@electron/rebuild` to fail), this tool automatically downloads the full source code from npm for the exact versions needed. It recompiles them into Linux ELF binaries against the Linux Electron headers in an isolated directory, and then replaces the original modules;
 5. Update platform-specific binary dependencies adapted for Linux;
 6. Generate Linux system startup configuration and package metadata locally;
 7. Compile a native package for the current distribution and install the latest version via `make install`.
