@@ -136,6 +136,7 @@ export CHROME_DESKTOP="${APP_ID}.desktop"
 export ELECTRON_FORCE_IS_PACKAGED=1
 
 exec "\$APP_DIR/electron" \\
+  --class="${APP_ID}" \\
   --no-sandbox \\
   --disable-dev-shm-usage \\
   --disable-gpu-sandbox \\
