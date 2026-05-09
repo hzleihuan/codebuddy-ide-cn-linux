@@ -1,4 +1,4 @@
-# CodeBuddy IDE CN for Linux
+# CodeBuddy IDE CN for Linux (Unoffical)
 
 [English](#english) | [简体中文](#简体中文)
 
@@ -11,6 +11,8 @@
 这是一款非官方社区工具，核心作用是将你自行获取的官方 CodeBuddy IDE CN macOS Intel/x64 版本 DMG 安装包，转换为可在本地 Linux 系统运行的 Electron 应用。
 
 本仓库**仅作为转换工具**，绝不充当软件分发渠道。请务必前往官方网站下载正版 Intel/x64 架构 DMG 安装包，放置于项目 `downloads/` 目录下；所有生成的应用目录、安装包产物均仅保留在本地，且已加入 Git 忽略规则，不会被提交至仓库。
+
+遇到任何 Bug 请在此仓库提 Issue ，严禁跳脸向官方客服反馈在 Linux 移植后使用的相关问题。
 
 ## 项目状态
 
@@ -133,6 +135,8 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.
 This is an unofficial community tool designed to convert your legally obtained official CodeBuddy IDE CN macOS Intel/x64 DMG installer into a local Linux Electron application.
 
 This repository **serves solely as a converter** and will never act as a software redistribution channel. Please download the genuine Intel/x64 DMG installer from the official website and place it in the `downloads/` directory. All generated application directories and package artifacts are stored locally only and are added to Git ignore rules to avoid being committed to the repository.
+
+If you encounter any bugs, please submit an Issue in this repository. Do not directly contact official customer service to report issues related to usage after Linux porting.
 
 ## Project Status
 
