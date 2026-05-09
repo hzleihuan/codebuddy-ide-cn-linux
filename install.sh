@@ -140,6 +140,7 @@ exec "\$APP_DIR/electron" \\
   --disable-dev-shm-usage \\
   --disable-gpu-sandbox \\
   --ozone-platform-hint=auto \\
+  --enable-wayland-ime \\
   "\$@"
 EOF
     chmod +x "$INSTALL_DIR/start.sh"
