@@ -106,6 +106,10 @@ ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
 ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
 ```
 
+## 版本适配说明
+
+当前补丁基于官方 CodeBuddy IDE CN **4.9.8**（构建号 `26735874-04507acd-cn`）验证通过。更高版本的 DMG 可能因为上游代码结构变化导致补丁无法正确应用。如遇到构建失败或运行异常，请在本仓库提 Issue 并附上所使用的 DMG 版本号。
+
 ## 仓库维护规范
 
 以下目录因会存放上游软件、生成类安装包文件，已被 Git 忽略，**切勿手动提交**：
@@ -121,6 +125,14 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.
 ## 免责声明
 
 本项目为**非官方社区开源工具**，与腾讯官方无任何关联。CodeBuddy IDE CN 是腾讯旗下产品（版权 © 2026 腾讯云计算（北京）有限责任公司丨腾讯科技（深圳）有限公司 版权所有）。本工具不分发任何 CodeBuddy IDE CN 官方软件，仅自动化实现用户对自有正版安装包的格式转换流程。
+
+使用本工具即表示您已知悉并同意以下内容：
+
+1. **用户责任**：您有责任确保自行获取的 DMG 安装包来源合法，并遵守 CodeBuddy 的最终用户许可协议（EULA）及相关服务条款。
+2. **无担保**：本工具按"现状"提供，不提供任何形式的明示或暗示担保，包括但不限于对适销性、特定用途适用性和非侵权性的担保。
+3. **无官方支持**：本项目是独立社区项目，腾讯官方不对本工具提供任何技术支持。在 Linux 移植环境下遇到的问题，请在本仓库提 Issue，**严禁向官方客服反馈**。
+4. **风险自担**：使用本工具进行格式转换和运行所产生的一切后果，由用户自行承担。
+5. **商标声明**：CodeBuddy 相关标识是腾讯公司的商标或注册商标。本项目使用这些名称仅用于描述性目的，不暗示任何官方认可或授权。
 
 ## 开源许可证
 
@@ -230,6 +242,10 @@ ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
 ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
 ```
 
+## Version Compatibility
+
+The current patches have been verified against official CodeBuddy IDE CN **4.9.8** (build `26735874-04507acd-cn`). Higher versions of the DMG may have upstream code structure changes that prevent patches from applying correctly. If you encounter build failures or runtime issues, please file an Issue in this repository with the DMG version number you are using.
+
 ## Repository Maintenance Rules
 
 The following directories are ignored by Git because they store upstream software and generated package files, **never commit them manually**:
@@ -245,6 +261,14 @@ Committing DMG installers, extracted `.app` bundles, generated Linux application
 ## Disclaimer
 
 This project is an **unofficial community open-source tool** and has no affiliation with Tencent. CodeBuddy IDE CN is a product of Tencent (copyright © 2026 Tencent Cloud Computing (Beijing) Co., Ltd. and Tencent Technology (Shenzhen) Co., Ltd. All rights reserved). This tool does not redistribute any official CodeBuddy IDE CN software, it only automates the format conversion process for users' genuine installers.
+
+By using this tool, you acknowledge and agree to the following:
+
+1. **User Responsibility**: You are responsible for ensuring that the DMG installer you obtained is from a legitimate source and that your usage complies with CodeBuddy's End User License Agreement (EULA) and related terms of service.
+2. **No Warranty**: This tool is provided "AS IS" without any express or implied warranties, including but not limited to warranties of merchantability, fitness for a particular purpose, and non-infringement.
+3. **No Official Support**: This project is an independent community project. Tencent does not provide any technical support for this tool. For issues encountered in the Linux porting environment, please file an Issue in this repository. **Do not report to official customer service.**
+4. **Use at Your Own Risk**: All consequences arising from using this tool for format conversion and running the application are borne solely by the user.
+5. **Trademark Notice**: CodeBuddy and related logos are trademarks or registered trademarks of Tencent. The use of these names in this project is for descriptive purposes only and does not imply any official endorsement or authorization.
 
 ## License
 
