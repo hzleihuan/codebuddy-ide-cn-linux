@@ -164,6 +164,9 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.
 4. **风险自担**：使用本工具进行格式转换和运行所产生的一切后果，由用户自行承担。
 5. **商标声明**：CodeBuddy 相关标识是腾讯公司的商标或注册商标。本项目使用这些名称仅用于描述性目的，不暗示任何官方认可或授权。
 6. **下架预案**：如腾讯或任何相关权利方对本项目存在异议，请通过本仓库 Issue 或邮件联系维护者。维护者承诺在收到合理异议后立即停止维护、下架 AUR 包，并按权利方要求处理 GitHub 仓库。
+7. **项目定位**： 本项目（包括本 GitHub 仓库及相关的 AUR/PKGBUILD 自动化脚本）仅用于技术研究与概念验证。原作者从未、亦绝不分发任何官方二进制软件。
+8. **AUR 机制说明**： 相关的 AUR 软件包仅提供文本形式的构建“配方”（Script/PKGBUILD）。用户通过该脚本进行的任何下载、解包、格式转换等行为，均在用户本地计算机上独立发生，下载源均指向官方或合法的公开地址，本项目不托管任何受版权保护的二进制文件。
+9. **第三方责任**： 任何第三方因 Fork、修改本项目，或自行分发移植二进制安装包（Releases）而产生的版权争议与法律责任，均由该第三方独立承担，与本项目原作者无关。
 
 ## 开源许可证
 
@@ -329,6 +332,9 @@ By using this tool you acknowledge and agree to the following:
 4. **Use at Your Own Risk**: All consequences arising from using this tool for format conversion and running the application are borne solely by the user.
 5. **Trademark Notice**: CodeBuddy and related logos are trademarks or registered trademarks of Tencent. Any use of these names in this project is for descriptive purposes only and does not imply any official endorsement or authorization.
 6. **Takedown Policy**: If Tencent or any rights holder objects to this project, please contact the maintainer via a GitHub issue or email. The maintainer commits to immediately suspending maintenance, removing the AUR package, and processing the GitHub repository in accordance with the rights holder's reasonable request upon receipt of such objection.
+7. **Project Purpose**: This project (including this GitHub repository and any related AUR/PKGBUILD automation scripts) is intended solely for technical research and proof-of-concept purposes. The original author has never distributed, and will never distribute, any official proprietary binary software.
+8. **AUR Mechanism Clarification**: The related AUR package contains only text-based build scripts ("recipes"). All download, extraction, and format conversion processes are executed independently on the user's local machine. The build scripts fetch files directly from official or legally public URLs; this project does not host or store any copyrighted binary files.
+9. **Third-Party Responsibility**: Any copyright disputes or legal liabilities arising from third-party forks, modifications, or the independent publication of pre-compiled binary installation packages (including GitHub Releases) shall be the sole responsibility of such third parties, and are entirely unrelated to the original author.
 
 ## License
 
