@@ -1,4 +1,4 @@
-[English](#english) | [简体中文](#简体中文)
+[English](#english) | [简体中文](#简体中文) | [繁體中文](#繁體中文)
 
 # 简体中文
 
@@ -46,7 +46,7 @@ make check
 make build-app
 make package
 make install
-codebuddycn-ide --verbose
+codebuddy-ide-cn --verbose
 ```
 
 也可以直接运行未安装的生成应用：
@@ -68,6 +68,79 @@ ldd codebuddycn-app/resources/app/node_modules/native-keymap/build/Release/keyma
 ```bash
 ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-app
 ```
+
+---
+
+# 繁體中文
+
+# 移植筆記
+
+## 參考專案模式
+
+`codex-desktop-linux` 透過把上游軟體作為本地輸入，將 macOS-only Electron DMG 轉換為 Linux 應用程式。它的關鍵步驟是：
+
+1. 使用 `7z`/`7zz` 提取 DMG。
+2. 從 `Electron Framework.framework/.../Info.plist` 偵測 Electron 版本。
+3. 複製或修補應用程式載荷。
+4. 下載匹配的 Linux Electron 執行時。
+5. 為 Linux/Electron 重建原生 Node 模組。
+6. 寫入啟動器和原生套件。
+7. 透過 `install-deps.sh`、`make build-app`、`make package`、`make install` 串起完整本地流程。
+
+重要的法律和工程邊界是：生成的載荷是本地產物，不是儲存庫內容。本專案只採用本地轉換、相依性安裝和套件構建流程，不移植參考專案的自動更新程式。
+
+## CodeBuddy 差異
+
+已經檢查過的 CodeBuddy IDE CN macOS bundle 使用：
+
+- 應用程式顯示名稱：`CodeBuddy CN`；
+- bundle id：`com.tencent.codebuddycn`；
+- Electron：`34.5.1`；
+- 應用程式版本：`1.100.0`；
+- 應用程式載荷：`Contents/Resources/app`；
+- VS Code product application name：`buddycn`；
+- URL scheme：`codebuddycn`。
+
+這些值來自當前樣本，只用於理解結構；構建腳本會從使用者放入 `downloads/` 的官方 DMG 自動讀取應用程式 bundle 和 Electron 版本，不綁定某一個具體 DMG 檔案名稱或版本號。
+
+不同於 Codex 參考專案，這個 bundle 以 `resources/app` 目錄形式解包，而不是主要依賴 `app.asar`。因此轉換器可以直接把應用程式載荷複製到 Linux Electron 執行時中。
+
+macOS 載荷裡發現的原生模組包括 `node-pty`、`native-keymap`、`native-watchdog`、`@vscode/sqlite3`、`@vscode/spdlog`、`@parcel/watcher`、`kerberos` 和相關可選模組。Linux 構建器會在複製後的應用程式上執行 `@electron/rebuild`，讓這些模組被重建或替換為 Linux 版本。
+
+## 首次 Linux 驗證清單
+
+把唯一一個官方 Intel/x64 DMG 放入 `downloads/`，然後執行：
+
+```bash
+bash scripts/install-deps.sh
+make check
+make build-app
+make package
+make install
+codebuddy-ide-cn --verbose
+```
+
+也可以直接執行未安裝的生成應用程式：
+
+```bash
+./codebuddycn-app/start.sh --verbose
+```
+
+如果 UI 能開啟，但終端機或檔案監聽失敗，請檢查：
+
+```bash
+find codebuddycn-app/resources/app/node_modules -name '*.node' -print
+ldd codebuddycn-app/resources/app/node_modules/node-pty/build/Release/pty.node
+ldd codebuddycn-app/resources/app/node_modules/native-keymap/build/Release/keymapping.node
+```
+
+如果原生模組重建失敗，可以用下面的方式重試：
+
+```bash
+ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-app
+```
+
+---
 
 # English
 
@@ -115,7 +188,7 @@ make check
 make build-app
 make package
 make install
-codebuddycn-ide --verbose
+codebuddy-ide-cn --verbose
 ```
 
 You can also run the generated app before installing it:

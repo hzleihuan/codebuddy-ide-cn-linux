@@ -9,11 +9,11 @@ REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_DIR="${APP_DIR:-$REPO_DIR/codebuddycn-app}"
 DIST_DIR="${DIST_DIR:-$REPO_DIR/dist}"
 PKG_WORK="${PKG_WORK:-$DIST_DIR/pacman-work}"
-PACKAGE_NAME="${PACKAGE_NAME:-codebuddycn-ide}"
+PACKAGE_NAME="${PACKAGE_NAME:-codebuddy-ide-cn}"
 PACKAGE_VERSION="${PACKAGE_VERSION:-$(date -u +%Y.%m.%d.%H%M%S)}"
 PACMAN_VERSION="${PACKAGE_VERSION//+/_}"
 PACMAN_VERSION="${PACMAN_VERSION//-/_}"
-DESKTOP_TEMPLATE="$REPO_DIR/packaging/linux/codebuddycn-ide.desktop"
+DESKTOP_TEMPLATE="$REPO_DIR/packaging/linux/codebuddy-ide-cn.desktop"
 
 map_arch() {
     case "$(uname -m)" in
@@ -47,6 +47,7 @@ pkgdesc='Unofficial local Linux conversion of CodeBuddy IDE CN'
 arch=('$arch')
 license=('MIT')
 depends=('gtk3' 'nss' 'libxss' 'alsa-lib' 'libsecret' 'libxkbfile')
+conflicts=('codebuddycn-ide' 'codebuddy-cn-ide')
 source=()
 sha256sums=()
 

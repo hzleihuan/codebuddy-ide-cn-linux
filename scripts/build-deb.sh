@@ -9,9 +9,9 @@ REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_DIR="${APP_DIR:-$REPO_DIR/codebuddycn-app}"
 DIST_DIR="${DIST_DIR:-$REPO_DIR/dist}"
 PKG_ROOT="${PKG_ROOT:-$DIST_DIR/deb-root}"
-PACKAGE_NAME="${PACKAGE_NAME:-codebuddycn-ide}"
+PACKAGE_NAME="${PACKAGE_NAME:-codebuddy-ide-cn}"
 PACKAGE_VERSION="${PACKAGE_VERSION:-$(date -u +%Y.%m.%d.%H%M%S)}"
-DESKTOP_TEMPLATE="$REPO_DIR/packaging/linux/codebuddycn-ide.desktop"
+DESKTOP_TEMPLATE="$REPO_DIR/packaging/linux/codebuddy-ide-cn.desktop"
 CONTROL_TEMPLATE="$REPO_DIR/packaging/linux/control"
 
 map_arch() {

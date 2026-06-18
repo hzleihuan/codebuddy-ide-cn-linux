@@ -9,11 +9,11 @@ REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_DIR="${APP_DIR:-$REPO_DIR/codebuddycn-app}"
 DIST_DIR="${DIST_DIR:-$REPO_DIR/dist}"
 PKG_ROOT="${PKG_ROOT:-$DIST_DIR/rpm-root}"
-PACKAGE_NAME="${PACKAGE_NAME:-codebuddycn-ide}"
+PACKAGE_NAME="${PACKAGE_NAME:-codebuddy-ide-cn}"
 PACKAGE_VERSION="${PACKAGE_VERSION:-$(date -u +%Y.%m.%d.%H%M%S)}"
 RPM_VERSION="${PACKAGE_VERSION//+/_}"
 RPM_VERSION="${RPM_VERSION//-/_}"
-DESKTOP_TEMPLATE="$REPO_DIR/packaging/linux/codebuddycn-ide.desktop"
+DESKTOP_TEMPLATE="$REPO_DIR/packaging/linux/codebuddy-ide-cn.desktop"
 SPEC_FILE="$DIST_DIR/$PACKAGE_NAME.spec"
 
 map_arch() {
@@ -69,6 +69,7 @@ Summary: Unofficial local Linux conversion of CodeBuddy IDE CN
 License: MIT
 BuildArch: $arch
 Requires: gtk3, nss, libXScrnSaver, alsa-lib, libsecret, libxkbfile
+Conflicts: codebuddycn-ide, codebuddy-cn-ide
 
 %description
 This package is generated locally from a user-owned official CodeBuddy IDE CN

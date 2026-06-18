@@ -1,6 +1,6 @@
 [Desktop Entry]
-Name=CodeBuddy IDE CN
-Comment=Run CodeBuddy IDE CN on Linux
+Name=CodeBuddy CN
+Comment=Run CodeBuddy CN on Linux
 Exec=__EXEC__
 Icon=codebuddycn
 Type=Application

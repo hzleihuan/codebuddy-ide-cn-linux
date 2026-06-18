@@ -2,8 +2,8 @@
 set -Eeuo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-APP_ID="${CODEBUDDY_APP_ID:-codebuddycn-ide}"
-APP_DISPLAY_NAME="${CODEBUDDY_APP_DISPLAY_NAME:-CodeBuddy IDE CN}"
+APP_ID="${CODEBUDDY_APP_ID:-codebuddy-ide-cn}"
+APP_DISPLAY_NAME="${CODEBUDDY_APP_DISPLAY_NAME:-CodeBuddy CN}"
 INSTALL_DIR="${CODEBUDDY_INSTALL_DIR:-$SCRIPT_DIR/codebuddycn-app}"
 ELECTRON_VERSION="${ELECTRON_VERSION:-34.5.1}"
 ELECTRON_HEADERS_URL="${ELECTRON_HEADERS_URL:-${npm_config_disturl:-${NPM_CONFIG_DISTURL:-https://artifacts.electronjs.org/headers/dist}}}"
@@ -191,7 +191,7 @@ write_desktop_entry() {
     cat > "$INSTALL_DIR/.codebuddycn-linux/$APP_ID.desktop" <<EOF
 [Desktop Entry]
 Name=$APP_DISPLAY_NAME
-Comment=Run CodeBuddy IDE CN on Linux
+Comment=Run $APP_DISPLAY_NAME on Linux
 Exec=$INSTALL_DIR/start.sh %F
 Icon=$icon_value
 Type=Application

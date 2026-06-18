@@ -16,7 +16,7 @@ latest_artifact() {
 
 install_deb() {
     local artifact
-    artifact="$(latest_artifact 'codebuddycn-ide_*.deb')"
+    artifact="$(latest_artifact 'codebuddy-ide-cn_*.deb')"
     [ -n "$artifact" ] || return 1
     info "Installing $artifact"
     sudo dpkg -i "$artifact"
@@ -24,7 +24,7 @@ install_deb() {
 
 install_rpm() {
     local artifact
-    artifact="$(latest_artifact 'codebuddycn-ide-*.rpm')"
+    artifact="$(latest_artifact 'codebuddy-ide-cn-*.rpm')"
     [ -n "$artifact" ] || return 1
     info "Installing $artifact"
     if command -v dnf5 >/dev/null 2>&1; then
@@ -40,7 +40,7 @@ install_rpm() {
 
 install_pacman() {
     local artifact
-    artifact="$(latest_artifact 'codebuddycn-ide-*.pkg.tar.zst')"
+    artifact="$(latest_artifact 'codebuddy-ide-cn-*.pkg.tar.zst')"
     [ -n "$artifact" ] || return 1
     command -v pacman >/dev/null 2>&1 || return 1
     info "Installing $artifact"

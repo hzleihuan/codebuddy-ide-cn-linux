@@ -1,6 +1,30 @@
+<div align="center">
+
 # CodeBuddy IDE CN for Linux (Unofficial)
 
-[English](#english) | [简体中文](#简体中文)
+</div>
+
+<div align="center">
+
+Codebuddy IDE CN（国内版）的非官方 Linux 自动化移植与安装构建脚本工具
+
+</div>
+<p align="middle">
+  <img src="https://img.shields.io/badge/deb-Ubuntu_%7C_Debian-A81D33?style=flat&logo=debian&logoColor=white" alt="Debian Ubuntu Support">
+  <a href="https://aur.archlinux.org/packages/codebuddy-ide-cn" target="_blank">
+  <img src="https://img.shields.io/badge/AUR-codebuddy--ide--cn-1793D1?style=flat&logo=arch-linux&logoColor=white" alt="AUR Package"></a>
+  <img src="https://img.shields.io/badge/rpm-Fedora_%7C_RHEL-006699?style=flat&logo=fedora&logoColor=white" alt="Fedora RHEL Support">
+  <br>
+  <img src="https://img.shields.io/badge/版本适配-v4.9.13-0052D9?style=flat&logo=probot&logoColor=white" alt="Supported Version">
+  <img src="https://img.shields.io/badge/Electron-v34.5.1-47307B?style=flat&logo=electron&logoColor=white" alt="Electron Version">
+  <img src="https://img.shields.io/badge/状态-Unofficial-d73a49?style=flat" alt="Status Unofficial">
+</p>
+
+<div align="center">
+
+[English](#english) | [简体中文](#简体中文) | [繁體中文](#繁體中文)
+
+</div>
 
 ---
 
@@ -14,6 +38,10 @@
 
 遇到任何 Bug 请在此仓库提 Issue，严禁向腾讯官方客服反馈在 Linux 移植后使用的相关问题。请勿在腾讯 CodeBuddy 官方用户群、社交媒体讨论本项目，本项目应保持低调维护。
 
+## 版本适配说明
+
+当前转换流程基于官方 CodeBuddy IDE CN **4.9.13**（构建号 `30241433-0acccacc-cn`）验证通过。更高版本的 DMG 可能因为上游代码结构变化导致流程失败。如遇到构建失败或运行异常，请在本仓库提 Issue 并附上所使用的 DMG 版本号。
+
 ## 快速安装
 
 ### Arch Linux / CachyOS / Manjaro 等 Arch 系发行版
@@ -21,20 +49,20 @@
 直接通过 AUR 安装，无需 clone 本仓库：
 
 ```bash
-yay -S codebuddy-cn-ide
+yay -S codebuddy-ide-cn
 # 或者
-paru -S codebuddy-cn-ide
+paru -S codebuddy-ide-cn
 ```
 
 也可以手动构建：
 
 ```bash
-git clone https://aur.archlinux.org/codebuddy-cn-ide.git
-cd codebuddy-cn-ide
+git clone https://aur.archlinux.org/codebuddy-ide-cn.git
+cd codebuddy-ide-cn
 makepkg -si
 ```
 
-AUR 包页面：<https://aur.archlinux.org/packages/codebuddy-cn-ide>
+AUR 包页面：<https://aur.archlinux.org/packages/codebuddy-ide-cn>
 
 > 构建过程会自动从腾讯官方 CDN 下载约 180 MB 的官方 DMG，请保持网络畅通。本仓库与 AUR 包均不重新分发任何腾讯软件二进制。
 
@@ -46,7 +74,7 @@ AUR 包页面：<https://aur.archlinux.org/packages/codebuddy-cn-ide>
 4. 依次执行：
 
 ```bash
-bash scripts/install-deps.sh
+make deps
 make build-app
 make package
 make install
@@ -66,7 +94,7 @@ make install
 - 更新适配 Linux 平台的依赖包，例如 `@vscode/ripgrep`；
 - 自动生成 Linux 系统启动器与桌面入口文件；
 - 根据当前 Linux 发行版，一键生成适配的 `.deb`、`.rpm` 或 `.pkg.tar.zst` 格式安装包；
-- 通过 AUR 上架 `codebuddy-cn-ide`，Arch 系用户可一键安装。
+- 通过 AUR 上架 `codebuddy-ide-cn`，Arch 系用户可一键安装。
 
 > 测试范围：已在 Debian 系（Linux Mint 22.3）和 Arch 系（CachyOS）完成完整打包部署实测，运行稳定。
 > 项目**未集成自动更新功能**。如需更新软件，只需手动下载新版官方 DMG 后重新执行构建流程即可覆盖本地旧版本；AUR 用户等包升级 push 后正常 `yay -Syu` 即可。
@@ -131,9 +159,9 @@ ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
 ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
 ```
 
-## 版本适配说明
+## 迁移说明
 
-当前转换流程基于官方 CodeBuddy IDE CN **4.9.9**（构建号 `27861944-19255a94-cn`）验证通过。更高版本的 DMG 可能因为上游代码结构变化导致流程失败。如遇到构建失败或运行异常，请在本仓库提 Issue 并附上所使用的 DMG 版本号。
+如果您之前安装过旧版 `codebuddycn-ide`，请参考 [迁移指南](docs/migration.md) 迁移到新版 `codebuddy-ide-cn`。
 
 ## 仓库维护规范
 
@@ -174,6 +202,180 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.
 
 ---
 
+# 繁體中文
+
+## 專案簡介
+
+這是一款非官方社群工具，核心作用是將官方 CodeBuddy IDE CN macOS Intel/x64 版本 DMG 安裝包，轉換為可在本地 Linux 系統運行的 Electron 應用程式。
+
+本儲存庫**僅作為轉換工具**，絕不充當軟體分發管道。所有官方安裝包由使用者機器自行從騰訊官方 CDN 下載，所有生成的應用程式目錄、安裝包產物均僅保留在本地，已加入 Git 忽略規則，不會被提交至儲存庫。
+
+遇到任何 Bug 請在此儲存庫提 Issue，嚴禁向騰訊官方客服回報在 Linux 移植後使用的相關問題。請勿在騰訊 CodeBuddy 官方使用者群組、社群媒體討論本專案，本專案應保持低調維護。
+
+## 版本適配說明
+
+當前轉換流程基於官方 CodeBuddy IDE CN **4.9.13**（構建號 `30241433-0acccacc-cn`）驗證通過。更高版本的 DMG 可能因為上游程式碼結構變化導致流程失敗。如遇到構建失敗或執行異常，請在本儲存庫提 Issue 並附上所使用的 DMG 版本號。
+
+## 快速安裝
+
+### Arch Linux / CachyOS / Manjaro 等 Arch 系發行版
+
+直接透過 AUR 安裝，無需 clone 本儲存庫：
+
+```bash
+yay -S codebuddy-ide-cn
+# 或者
+paru -S codebuddy-ide-cn
+```
+
+也可以手動構建：
+
+```bash
+git clone https://aur.archlinux.org/codebuddy-ide-cn.git
+cd codebuddy-ide-cn
+makepkg -si
+```
+
+AUR 套件頁面：<https://aur.archlinux.org/packages/codebuddy-ide-cn>
+
+> 構建過程會自動從騰訊官方 CDN 下載約 180 MB 的官方 DMG，請保持網路暢通。本儲存庫與 AUR 套件均不重新分發任何騰訊軟體二進位檔案。
+
+### 其他 Linux 發行版（Debian / Ubuntu / Linux Mint / Fedora / openSUSE 等）
+
+1. 複製本專案至本地 Linux 機器；
+2. 在專案根目錄建立 `downloads` 資料夾；
+3. 自行從官方網站下載 Intel/x64 架構 DMG 安裝包，放入 `downloads/` 目錄；
+4. 依次執行：
+
+```bash
+make deps
+make build-app
+make package
+make install
+```
+
+`scripts/install-deps.sh` 會自動辨識當前系統的套件管理器（支援 `apt`、`dnf5`、`dnf`、`pacman`、`zypper`），一鍵安裝 DMG 提取、Electron 執行時下載、原生模組重建、安裝包生成所需的全部相依性。
+
+## 專案狀態
+
+目前專案已完整實現 Linux 端的轉換與打包核心流程，具體功能如下：
+
+- 借助 `7z`/`7zz` 工具，自動提取 `downloads/` 目錄下的官方 DMG 安裝包；
+- 從 macOS 應用程式套件後設資料中，自動識別上游 Electron 版本號；
+- 下載與識別版本匹配的 Linux 版 Electron 執行時；
+- 將 CodeBuddy 應用程式核心程式複製至 `resources/app` 目錄；
+- 透過 `@electron/rebuild` 針對 Linux 系統與 Electron 環境重建原生 Node 模組；
+- 更新適配 Linux 平台的相依套件，例如 `@vscode/ripgrep`；
+- 自動生成 Linux 系統啟動器與桌面入口檔案；
+- 根據當前 Linux 發行版，一鍵生成適配的 `.deb`、`.rpm` 或 `.pkg.tar.zst` 格式安裝包；
+- 透過 AUR 上架 `codebuddy-ide-cn`，Arch 系使用者可一鍵安裝。
+
+> 測試範圍：已在 Debian 系（Linux Mint 22.3）和 Arch 系（CachyOS）完成完整打包部署實測，執行穩定。
+> 專案**未整合自動更新功能**。如需更新軟體，只需手動下載新版官方 DMG 後重新執行構建流程即可覆蓋本地舊版本；AUR 使用者等套件升級 push 後正常 `yay -Syu` 即可。
+
+## 構建與執行
+
+### 推薦構建方式
+
+將官方 DMG 檔案放入 `downloads/` 目錄後，直接執行：
+
+```bash
+make build-app
+```
+
+### 自訂 DMG 路徑
+
+也可手動指定官方 DMG 檔案路徑：
+
+```bash
+make build-app DMG=/path/to/CodeBuddy.dmg
+```
+
+### 執行生成的應用程式
+
+```bash
+make run-app
+```
+
+### 打包並安裝
+
+自動生成適配當前發行版的安裝包，並完成本地安裝：
+
+```bash
+make package
+make install
+```
+
+## 實現原理
+
+本專案參考了 `codex-desktop-linux` 的本地轉換與打包邏輯，但**未移植其自動更新模組**，核心流程如下：
+
+1. 以使用者自行提供（或由 AUR 套件自動從官方 CDN 下載）的官方 macOS DMG 安裝包作為輸入來源；
+2. 僅提取 Electron 應用程式核心程式，不對外分發任何官方軟體內容；
+3. 用對應版本的 Linux Electron 執行時，替換原 macOS 版執行時；
+4. **原生模組從原始碼拉取與重新編譯**：由於 macOS DMG 預打包的原生模組（如 `node-pty`）被剝離了 C++ 原始碼與構建設定（導致直接 `@electron/rebuild` 失敗），本工具會自動從 npm 下載對應版本的完整原始碼，在隔離目錄基於 Linux Electron 頭檔案重新編譯為 ELF 二進位檔案，再覆蓋回應用程式目錄；
+5. 更新適配 Linux 平台的專屬二進位相依套件；
+6. 本地生成 Linux 系統啟動設定與安裝包後設資料；
+7. 編譯生成對應發行版的原生安裝包，透過 `make install` 或 AUR helper 完成安裝。
+
+CodeBuddy IDE CN 基於 VS Code/Electron 開發，其 macOS 應用程式的 `Contents/Resources/app` 目錄下已包含跨平台 JavaScript 核心程式碼，Linux 轉換只需完成平台二進位檔案替換、原生模組重新編譯即可實現相容。
+
+## 常用自訂設定
+
+如需自訂安裝路徑、切換 Electron 鏡像，可透過以下命令執行：
+
+```bash
+# 自訂安裝目錄
+CODEBUDDY_INSTALL_DIR=/opt/tmp/codebuddycn-app bash install.sh
+# 切換 Electron 鏡像來源
+ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
+# 自訂 Electron 頭檔案下載位址
+ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
+```
+
+## 遷移說明
+
+如果您之前安裝過舊版 `codebuddycn-ide`，請參考 [遷移指南](docs/migration.md) 遷移到新版 `codebuddy-ide-cn`。
+
+## 儲存庫維護規範
+
+以下目錄因會存放上游軟體、生成類安裝包檔案，已被 Git 忽略，**切勿手動提交**：
+
+- `downloads/`
+- `build/`
+- `codebuddycn-app/`
+- `dist/`
+- `reference/`
+
+禁止提交 DMG 安裝包、解壓縮後的 `.app` 應用程式套件、生成的 Linux 應用程式目錄及各類原生安裝包產物。
+
+## 免責聲明
+
+本專案為**非官方社群開源工具**，與騰訊官方無任何關聯。CodeBuddy IDE CN 是騰訊旗下產品，版權歸騰訊所有，詳細版權資訊請參閱官方網站。本工具不分發任何 CodeBuddy IDE CN 官方軟體，僅自動化實現使用者對自有正版安裝包的格式轉換流程。
+
+使用本工具產生的 CodeBuddy 應用程式受騰訊官方協議約束：
+
+- CodeBuddy 服務條款：<https://cloud.tencent.com/document/product/301/106125>
+- CodeBuddy 使用者隱私協議：<https://privacy.qq.com/document/preview/284d799a07164d09bfc7cedd0ec3e089>
+
+使用本工具即表示您已知悉並同意以下內容：
+
+1. **使用者責任**：您有責任確保自行取得的 DMG 安裝包來源合法，並遵守 CodeBuddy 的最終使用者授權協議（EULA）及相關服務條款。
+2. **無擔保**：本工具按「現狀」提供，不提供任何形式的明示或暗示擔保，包括但不限于對適銷性、特定用途適用性和非侵權性的擔保。
+3. **無官方支援**：本專案是獨立社群專案，騰訊官方不對本工具提供任何技術支援。在 Linux 移植環境下遇到的問題，請在本儲存庫提 Issue，**嚴禁向官方客服回報**。
+4. **風險自擔**：使用本工具進行格式轉換和執行所產生的一切後果，由使用者自行承擔。
+5. **商標聲明**：CodeBuddy 相關標識是騰訊公司的商標或註冊商標。本專案使用這些名稱僅用於描述性目的，不暗示任何官方認可或授權。
+6. **下架預案**：如騰訊或任何相關權利方對本專案存在異議，請透過本儲存庫 Issue 或電子郵件聯繫維護者。維護者承諾在收到合理異議後立即停止維護、下架 AUR 套件，並按權利方要求處理 GitHub 儲存庫。
+7. **專案定位**：本專案（包括本 GitHub 儲存庫及相關的 AUR/PKGBUILD 自動化腳本）僅用於技術研究與概念驗證。原作者從未、亦絕不分發任何官方二進位軟體。
+8. **AUR 機制說明**：相關的 AUR 軟體套件僅提供文本形式的構建「配方」（Script/PKGBUILD）。使用者透過該腳本進行的任何下載、解包、格式轉換等行為，均在使用者本地電腦上獨立發生，下載來源均指向官方或合法的公開位址，本專案不託管任何受版權保護的二進位檔案。
+9. **第三方責任**：任何第三方因 Fork、修改本專案，或自行分發移植二進位安裝包（Releases）而產生的版權爭議與法律責任，均由該第三方獨立承擔，與本專案原作者無關。
+
+## 開源授權條款
+
+本專案（PKGBUILD、轉換腳本及相關 recipe）採用 MIT 開源授權條款，詳見 [LICENSE](LICENSE)。MIT 授權僅覆蓋本儲存庫中的轉換工具，**不延伸到透過本工具安裝的騰訊 CodeBuddy IDE 二進位檔案**——後者仍受騰訊官方私有協議約束。
+
+---
+
 # English
 
 ## Project Introduction
@@ -184,6 +386,10 @@ This repository **serves solely as a converter** and is never a software redistr
 
 If you encounter bugs, please submit an Issue here. Do not contact Tencent official customer service to report Linux porting issues. Please do not promote this project in CodeBuddy official user groups or social media; this project is intended to be maintained quietly.
 
+## Version Compatibility
+
+The current conversion workflow has been verified against official CodeBuddy IDE CN **4.9.13** (build `30241433-0acccacc-cn`). Higher versions of the DMG may have upstream code structure changes that prevent the flow from completing. If you encounter build failures or runtime issues, please file an Issue with the DMG version number.
+
 ## Quick Install
 
 ### Arch Linux / CachyOS / Manjaro and other Arch-based distros
@@ -191,20 +397,20 @@ If you encounter bugs, please submit an Issue here. Do not contact Tencent offic
 Install directly from the AUR, no need to clone this repository:
 
 ```bash
-yay -S codebuddy-cn-ide
+yay -S codebuddy-ide-cn
 # or
-paru -S codebuddy-cn-ide
+paru -S codebuddy-ide-cn
 ```
 
 Or build manually:
 
 ```bash
-git clone https://aur.archlinux.org/codebuddy-cn-ide.git
-cd codebuddy-cn-ide
+git clone https://aur.archlinux.org/codebuddy-ide-cn.git
+cd codebuddy-ide-cn
 makepkg -si
 ```
 
-AUR package page: <https://aur.archlinux.org/packages/codebuddy-cn-ide>
+AUR package page: <https://aur.archlinux.org/packages/codebuddy-ide-cn>
 
 > The build process automatically downloads ~180 MB of the official DMG from Tencent's CDN. Neither this repository nor the AUR package re-distributes any Tencent binary.
 
@@ -216,7 +422,7 @@ AUR package page: <https://aur.archlinux.org/packages/codebuddy-cn-ide>
 4. Run:
 
 ```bash
-bash scripts/install-deps.sh
+make deps
 make build-app
 make package
 make install
@@ -236,7 +442,7 @@ The project fully implements the core Linux-side conversion and packaging workfl
 - Update Linux platform-adapted dependencies such as `@vscode/ripgrep`;
 - Auto-generate Linux system launcher and desktop entry files;
 - Generate distro-native `.deb`, `.rpm` or `.pkg.tar.zst` packages;
-- Distributed through AUR as `codebuddy-cn-ide` for one-click installation on Arch-based distros.
+- Distributed through AUR as `codebuddy-ide-cn` for one-click installation on Arch-based distros.
 
 > Testing scope: fully tested on Debian-based (Linux Mint 22.3) and Arch-based (CachyOS) systems.
 > No auto-update feature is integrated. To update, manually download the latest official DMG and re-run the build flow; AUR users get updates via standard `yay -Syu` once the AUR package is bumped.
@@ -299,9 +505,9 @@ ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
 ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
 ```
 
-## Version Compatibility
+## Migration Notes
 
-The current conversion workflow has been verified against official CodeBuddy IDE CN **4.9.9** (build `27861944-19255a94-cn`). Higher versions of the DMG may have upstream code structure changes that prevent the flow from completing. If you encounter build failures or runtime issues, please file an Issue with the DMG version number.
+If you previously installed the old `codebuddycn-ide` package, please refer to the [Migration Guide](docs/migration.md) to migrate to the new `codebuddy-ide-cn` package.
 
 ## Repository Maintenance Rules
 
