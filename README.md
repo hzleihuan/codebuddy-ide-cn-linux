@@ -132,6 +132,14 @@ make package
 make install
 ```
 
+### 清理构建产物
+
+清除所有构建生成的临时文件与应用目录：
+
+```bash
+make clean
+```
+
 ## 实现原理
 
 本项目参考了 `codex-desktop-linux` 的本地转换与打包逻辑，但**未移植其自动更新模块**，核心流程如下：
@@ -306,6 +314,14 @@ make package
 make install
 ```
 
+### 清理構建產物
+
+清除所有構建生成的暫存檔案與應用程式目錄：
+
+```bash
+make clean
+```
+
 ## 實現原理
 
 本專案參考了 `codex-desktop-linux` 的本地轉換與打包邏輯，但**未移植其自動更新模組**，核心流程如下：
@@ -478,6 +494,14 @@ Generate a distribution-compatible package and install it locally:
 ```bash
 make package
 make install
+```
+
+### Clean Build Artifacts
+
+Remove all generated temporary files and application directories:
+
+```bash
+make clean
 ```
 
 ## How It Works
