@@ -61,6 +61,9 @@ EOF
         icon_files_entry="/usr/share/icons/hicolor/256x256/apps/codebuddycn.png"
     fi
 
+    local changelog_date
+    changelog_date="$(date -u '+%a %b %d %Y')"
+
     cat > "$SPEC_FILE" <<EOF
 Name: $PACKAGE_NAME
 Version: $RPM_VERSION
@@ -85,6 +88,10 @@ cp -a $PKG_ROOT/. %{buildroot}/
 /usr/bin/$PACKAGE_NAME
 /usr/share/applications/$PACKAGE_NAME.desktop
 $icon_files_entry
+
+%changelog
+* $changelog_date Auto Builder <builder@codebuddy.local> - $RPM_VERSION-1
+- Initial release for Fedora.
 EOF
 
     rpmbuild --define "_topdir $output_dir" --define "_build_id_links none" -bb "$SPEC_FILE" >&2

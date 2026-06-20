@@ -10,14 +10,17 @@ Codebuddy IDE CN（国内版）的非官方 Linux 自动化移植与安装构建
 
 </div>
 <p align="middle">
-  <img src="https://img.shields.io/badge/deb-Ubuntu_%7C_Debian-A81D33?style=flat&logo=debian&logoColor=white" alt="Debian Ubuntu Support">
-  <a href="https://aur.archlinux.org/packages/codebuddy-ide-cn" target="_blank">
-  <img src="https://img.shields.io/badge/AUR-codebuddy--ide--cn-1793D1?style=flat&logo=arch-linux&logoColor=white" alt="AUR Package"></a>
+  <img src="https://img.shields.io/badge/deb-Ubuntu_%7C_Debian_%7C_Linux_Mint-A81D33?style=flat&logo=debian&logoColor=white" alt="Debian Ubuntu Support">
+  <img src="https://img.shields.io/badge/arch-ArchLinux_%7C_CachyOS_%7C_Manjaro-1793D1?style=flat&logo=arch-linux&logoColor=white" alt="AUR Package">
   <img src="https://img.shields.io/badge/rpm-Fedora_%7C_RHEL-006699?style=flat&logo=fedora&logoColor=white" alt="Fedora RHEL Support">
   <br>
   <img src="https://img.shields.io/badge/版本适配-v4.9.13-0052D9?style=flat&logo=probot&logoColor=white" alt="Supported Version">
   <img src="https://img.shields.io/badge/Electron-v34.5.1-47307B?style=flat&logo=electron&logoColor=white" alt="Electron Version">
   <img src="https://img.shields.io/badge/状态-Unofficial-d73a49?style=flat" alt="Status Unofficial">
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat" alt="License MIT">
+  <br>
+  <a href="https://aur.archlinux.org/packages/codebuddy-ide-cn" target="_blank">
+  <img src="https://img.shields.io/badge/AUR-codebuddy--ide--cn-333333?style=flat&logo=arch-linux&logoColor=white" alt="AUR Package"></a>
 </p>
 
 <div align="center">
@@ -96,7 +99,7 @@ make install
 - 根据当前 Linux 发行版，一键生成适配的 `.deb`、`.rpm` 或 `.pkg.tar.zst` 格式安装包；
 - 通过 AUR 上架 `codebuddy-ide-cn`，Arch 系用户可一键安装。
 
-> 测试范围：已在 Debian 系（Linux Mint 22.3）和 Arch 系（CachyOS）完成完整打包部署实测，运行稳定。
+> 测试范围：已在 Debian 系（Linux Mint 22.3）、Arch 系（CachyOS）和 Fedora 系（Fedora 44）完成完整打包部署实测，运行稳定。
 > 项目**未集成自动更新功能**。如需更新软件，只需手动下载新版官方 DMG 后重新执行构建流程即可覆盖本地旧版本；AUR 用户等包升级 push 后正常 `yay -Syu` 即可。
 
 ## 构建与运行
@@ -185,7 +188,7 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.
 
 ## 免责声明
 
-本项目为**非官方社区开源工具**，与腾讯官方无任何关联。CodeBuddy IDE CN 是腾讯旗下产品，版权归腾讯所有，详细版权信息请参阅官方网站。本工具不分发任何 CodeBuddy IDE CN 官方软件，仅自动化实现用户对自有正版安装包的格式转换流程。
+本项目为**非官方社区开源工具**，与腾讯官方无任何关联。CodeBuddy IDE CN 是腾讯旗下产品（版权 © 2026 腾讯云计算（北京）有限责任公司丨腾讯科技（深圳）有限公司 版权所有），详细版权信息请参阅官方网站。本工具不分发任何 CodeBuddy IDE CN 官方软件，仅自动化实现用户对自有正版安装包的格式转换流程。
 
 使用本工具产生的 CodeBuddy 应用受腾讯官方协议约束：
 
@@ -278,7 +281,7 @@ make install
 - 根據當前 Linux 發行版，一鍵生成適配的 `.deb`、`.rpm` 或 `.pkg.tar.zst` 格式安裝包；
 - 透過 AUR 上架 `codebuddy-ide-cn`，Arch 系使用者可一鍵安裝。
 
-> 測試範圍：已在 Debian 系（Linux Mint 22.3）和 Arch 系（CachyOS）完成完整打包部署實測，執行穩定。
+> 測試範圍：已在 Debian 系（Linux Mint 22.3）、Arch 系（CachyOS）和 Fedora 系（Fedora 44）完成完整打包部署實測，執行穩定。
 > 專案**未整合自動更新功能**。如需更新軟體，只需手動下載新版官方 DMG 後重新執行構建流程即可覆蓋本地舊版本；AUR 使用者等套件升級 push 後正常 `yay -Syu` 即可。
 
 ## 構建與執行
@@ -367,7 +370,7 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.
 
 ## 免責聲明
 
-本專案為**非官方社群開源工具**，與騰訊官方無任何關聯。CodeBuddy IDE CN 是騰訊旗下產品，版權歸騰訊所有，詳細版權資訊請參閱官方網站。本工具不分發任何 CodeBuddy IDE CN 官方軟體，僅自動化實現使用者對自有正版安裝包的格式轉換流程。
+本專案為**非官方社群開源工具**，與騰訊官方無任何關聯。CodeBuddy IDE CN 是騰訊旗下產品（版權 © 2026 騰訊雲端運算（北京）有限責任公司丨騰訊科技（深圳）有限公司 版權所有），詳細版權資訊請參閱官方網站。本工具不分發任何 CodeBuddy IDE CN 官方軟體，僅自動化實現使用者對自有正版安裝包的格式轉換流程。
 
 使用本工具產生的 CodeBuddy 應用程式受騰訊官方協議約束：
 
@@ -460,7 +463,7 @@ The project fully implements the core Linux-side conversion and packaging workfl
 - Generate distro-native `.deb`, `.rpm` or `.pkg.tar.zst` packages;
 - Distributed through AUR as `codebuddy-ide-cn` for one-click installation on Arch-based distros.
 
-> Testing scope: fully tested on Debian-based (Linux Mint 22.3) and Arch-based (CachyOS) systems.
+> Testing scope: fully tested on Debian-based (Linux Mint 22.3), Arch-based (CachyOS), and Fedora-based (Fedora 44) systems.
 > No auto-update feature is integrated. To update, manually download the latest official DMG and re-run the build flow; AUR users get updates via standard `yay -Syu` once the AUR package is bumped.
 
 ## Build & Run
@@ -547,7 +550,7 @@ Committing DMG installers, extracted `.app` bundles, generated Linux application
 
 ## Disclaimer
 
-This project is an **unofficial community open-source tool** with no affiliation with Tencent. CodeBuddy IDE CN is a product of Tencent; copyright belongs to Tencent. See the official site for details. This tool does not redistribute any official CodeBuddy IDE CN software; it only automates the format conversion process for users' genuine installers.
+This project is an **unofficial community open-source tool** with no affiliation with Tencent. CodeBuddy IDE CN is a product of Tencent (Copyright © 2026 Tencent Cloud Computing (Beijing) Co., Ltd. / Tencent Technology (Shenzhen) Co., Ltd. All rights reserved). See the official site for details. This tool does not redistribute any official CodeBuddy IDE CN software; it only automates the format conversion process for users' genuine installers.
 
 The CodeBuddy application produced by this tool is governed by the official Tencent agreements:
 
