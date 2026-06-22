@@ -204,9 +204,9 @@ main() {
     esac
 
     info "Dependencies are ready. Next steps:"
-    info "  put one official Intel/x64 CodeBuddy IDE CN DMG in downloads/"
+    info "  make download   (or put one official Intel/x64 CodeBuddy IDE CN DMG in downloads/)"
     info "  make build-app"
-    info "  make package"
+    info "  make package    (or make appimage)"
     info "  make install"
 }
 

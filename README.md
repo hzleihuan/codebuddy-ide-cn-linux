@@ -9,10 +9,11 @@
 Codebuddy IDE CN（国内版）的非官方 Linux 自动化移植与安装构建脚本工具
 
 </div>
-<p align="middle">
+<p align="center">
   <img src="https://img.shields.io/badge/deb-Ubuntu_%7C_Debian_%7C_Linux_Mint-A81D33?style=flat&logo=debian&logoColor=white" alt="Debian Ubuntu Support">
   <img src="https://img.shields.io/badge/arch-ArchLinux_%7C_CachyOS_%7C_Manjaro-1793D1?style=flat&logo=arch-linux&logoColor=white" alt="AUR Package">
   <img src="https://img.shields.io/badge/rpm-Fedora_%7C_RHEL-006699?style=flat&logo=fedora&logoColor=white" alt="Fedora RHEL Support">
+  <img src="https://img.shields.io/badge/AppImage-All_Distros-007ACC?style=flat&logo=appimage&logoColor=white" alt="AppImage Support">
   <br>
   <img src="https://img.shields.io/badge/版本适配-v4.9.13-0052D9?style=flat&logo=probot&logoColor=white" alt="Supported Version">
   <img src="https://img.shields.io/badge/Electron-v34.5.1-47307B?style=flat&logo=electron&logoColor=white" alt="Electron Version">
@@ -72,16 +73,17 @@ AUR 包页面：<https://aur.archlinux.org/packages/codebuddy-ide-cn>
 ### 其他 Linux 发行版（Debian / Ubuntu / Linux Mint / Fedora / openSUSE 等）
 
 1. 克隆本项目至本地 Linux 机器；
-2. 在项目根目录创建 `downloads` 文件夹；
-3. 自行从官方网站下载 Intel/x64 架构 DMG 安装包，放入 `downloads/` 目录；
-4. 依次执行：
+2. 依次执行：
 
 ```bash
 make deps
+make download
 make build-app
-make package
+make package    # 或 make appimage
 make install
 ```
+
+`make download` 会自动从腾讯官方 CDN 下载 Intel/x64 架构的 DMG 安装包到 `downloads/` 目录。如已有旧版 DMG，会自动移至 `downloads/backups/` 备份。你也可以手动从官方网站下载 DMG 放入 `downloads/` 目录替代此步骤。
 
 `scripts/install-deps.sh` 会自动识别当前系统的包管理器（支持 `apt`、`dnf5`、`dnf`、`pacman`、`zypper`），一键安装 DMG 提取、Electron 运行时下载、原生模块重建、安装包生成所需的全部依赖。
 
@@ -97,12 +99,23 @@ make install
 - 更新适配 Linux 平台的依赖包，例如 `@vscode/ripgrep`；
 - 自动生成 Linux 系统启动器与桌面入口文件；
 - 根据当前 Linux 发行版，一键生成适配的 `.deb`、`.rpm` 或 `.pkg.tar.zst` 格式安装包；
+- 支持生成跨发行版通用的 AppImage 格式（`make appimage`），无需安装即可运行；
 - 通过 AUR 上架 `codebuddy-ide-cn`，Arch 系用户可一键安装。
 
 > 测试范围：已在 Debian 系（Linux Mint 22.3）、Arch 系（CachyOS）和 Fedora 系（Fedora 44）完成完整打包部署实测，运行稳定。
-> 项目**未集成自动更新功能**。如需更新软件，只需手动下载新版官方 DMG 后重新执行构建流程即可覆盖本地旧版本；AUR 用户等包升级 push 后正常 `yay -Syu` 即可。
+> 项目**未集成自动更新功能**。如需更新软件，只需执行 `make download` 下载新版官方 DMG 后重新执行构建流程即可覆盖本地旧版本；AUR 用户等包升级 push 后正常 `yay -Syu` 或 `paru -Syu` 即可。
 
 ## 构建与运行
+
+### 下载官方 DMG
+
+自动从腾讯官方 CDN 下载 Intel/x64 架构的 DMG 安装包到 `downloads/` 目录：
+
+```bash
+make download
+```
+
+如 `downloads/` 中已有旧版 DMG，会自动移至 `downloads/backups/` 备份后再下载新版。你也可以跳过此步骤，手动从官方网站下载 DMG 放入 `downloads/` 目录。
 
 ### 推荐构建方式
 
@@ -135,6 +148,16 @@ make package
 make install
 ```
 
+### 构建 AppImage
+
+生成跨发行版通用的 AppImage 格式，无需安装即可运行（会自动触发 `build-app`）：
+
+```bash
+make appimage
+```
+
+生成的 AppImage 位于 `dist/codebuddy-ide-cn-x86_64.AppImage`。首次构建会自动下载 `linuxdeploy` 工具到 `build/tools/` 缓存。
+
 ### 清理构建产物
 
 清除所有构建生成的临时文件与应用目录：
@@ -147,7 +170,7 @@ make clean
 
 本项目参考了 `codex-desktop-linux` 的本地转换与打包逻辑，但**未移植其自动更新模块**，核心流程如下：
 
-1. 以用户自行提供（或由 AUR 包自动从官方 CDN 下载）的官方 macOS DMG 安装包作为输入源；
+1. 以用户自行提供（或通过 `make download` / AUR 包自动从腾讯官方 CDN 下载）的官方 macOS DMG 安装包作为输入源；
 2. 仅提取 Electron 应用核心程序，不对外分发任何官方软件内容；
 3. 用对应版本的 Linux Electron 运行时，替换原 macOS 版运行时；
 4. **原生模块从源码拉取与重新编译**：由于 macOS DMG 预打包的原生模块（如 `node-pty`）被剥离了 C++ 源码与构建配置（导致直接 `@electron/rebuild` 失败），本工具会自动从 npm 下载对应版本的完整源码，在隔离目录基于 Linux Electron 头文件重新编译为 ELF 二进制文件，再覆盖回应用目录；
@@ -159,15 +182,15 @@ CodeBuddy IDE CN 基于 VS Code/Electron 开发，其 macOS 应用的 `Contents/
 
 ## 常用自定义配置
 
-如需自定义安装路径、切换 Electron 镜像，可通过以下命令执行：
+如需自定义安装路径、切换 Electron 镜像，可通过以下环境变量配合 `make build-app` 执行：
 
 ```bash
 # 自定义安装目录
-CODEBUDDY_INSTALL_DIR=/opt/tmp/codebuddycn-app bash install.sh
+CODEBUDDY_INSTALL_DIR=/opt/tmp/codebuddycn-app make build-app
 # 切换 Electron 镜像源
-ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
+ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ make build-app
 # 自定义 Electron 头文件下载地址
-ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
+ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-app
 ```
 
 ## 迁移说明
@@ -254,16 +277,17 @@ AUR 套件頁面：<https://aur.archlinux.org/packages/codebuddy-ide-cn>
 ### 其他 Linux 發行版（Debian / Ubuntu / Linux Mint / Fedora / openSUSE 等）
 
 1. 複製本專案至本地 Linux 機器；
-2. 在專案根目錄建立 `downloads` 資料夾；
-3. 自行從官方網站下載 Intel/x64 架構 DMG 安裝包，放入 `downloads/` 目錄；
-4. 依次執行：
+2. 依次執行：
 
 ```bash
 make deps
+make download
 make build-app
-make package
+make package    # 或 make appimage
 make install
 ```
+
+`make download` 會自動從騰訊官方 CDN 下載 Intel/x64 架構的 DMG 安裝包到 `downloads/` 目錄。如已有舊版 DMG，會自動移至 `downloads/backups/` 備份。你也可以手動從官方網站下載 DMG 放入 `downloads/` 目錄替代此步驟。
 
 `scripts/install-deps.sh` 會自動辨識當前系統的套件管理器（支援 `apt`、`dnf5`、`dnf`、`pacman`、`zypper`），一鍵安裝 DMG 提取、Electron 執行時下載、原生模組重建、安裝包生成所需的全部相依性。
 
@@ -279,12 +303,23 @@ make install
 - 更新適配 Linux 平台的相依套件，例如 `@vscode/ripgrep`；
 - 自動生成 Linux 系統啟動器與桌面入口檔案；
 - 根據當前 Linux 發行版，一鍵生成適配的 `.deb`、`.rpm` 或 `.pkg.tar.zst` 格式安裝包；
+- 支援生成跨發行版通用的 AppImage 格式（`make appimage`），無需安裝即可執行；
 - 透過 AUR 上架 `codebuddy-ide-cn`，Arch 系使用者可一鍵安裝。
 
 > 測試範圍：已在 Debian 系（Linux Mint 22.3）、Arch 系（CachyOS）和 Fedora 系（Fedora 44）完成完整打包部署實測，執行穩定。
-> 專案**未整合自動更新功能**。如需更新軟體，只需手動下載新版官方 DMG 後重新執行構建流程即可覆蓋本地舊版本；AUR 使用者等套件升級 push 後正常 `yay -Syu` 即可。
+> 專案**未整合自動更新功能**。如需更新軟體，只需執行 `make download` 下載新版官方 DMG 後重新執行構建流程即可覆蓋本地舊版本；AUR 使用者等套件升級 push 後正常 `yay -Syu` 或 `paru -Syu` 即可。
 
 ## 構建與執行
+
+### 下載官方 DMG
+
+自動從騰訊官方 CDN 下載 Intel/x64 架構的 DMG 安裝包到 `downloads/` 目錄：
+
+```bash
+make download
+```
+
+如 `downloads/` 中已有舊版 DMG，會自動移至 `downloads/backups/` 備份後再下載新版。你也可以跳過此步驟，手動從官方網站下載 DMG 放入 `downloads/` 目錄。
 
 ### 推薦構建方式
 
@@ -317,6 +352,16 @@ make package
 make install
 ```
 
+### 構建 AppImage
+
+生成跨發行版通用的 AppImage 格式，無需安裝即可執行（會自動觸發 `build-app`）：
+
+```bash
+make appimage
+```
+
+生成的 AppImage 位於 `dist/codebuddy-ide-cn-x86_64.AppImage`。首次構建會自動下載 `linuxdeploy` 工具到 `build/tools/` 快取。
+
 ### 清理構建產物
 
 清除所有構建生成的暫存檔案與應用程式目錄：
@@ -329,7 +374,7 @@ make clean
 
 本專案參考了 `codex-desktop-linux` 的本地轉換與打包邏輯，但**未移植其自動更新模組**，核心流程如下：
 
-1. 以使用者自行提供（或由 AUR 套件自動從官方 CDN 下載）的官方 macOS DMG 安裝包作為輸入來源；
+1. 以使用者自行提供（或透過 `make download` / AUR 套件自動從騰訊官方 CDN 下載）的官方 macOS DMG 安裝包作為輸入來源；
 2. 僅提取 Electron 應用程式核心程式，不對外分發任何官方軟體內容；
 3. 用對應版本的 Linux Electron 執行時，替換原 macOS 版執行時；
 4. **原生模組從原始碼拉取與重新編譯**：由於 macOS DMG 預打包的原生模組（如 `node-pty`）被剝離了 C++ 原始碼與構建設定（導致直接 `@electron/rebuild` 失敗），本工具會自動從 npm 下載對應版本的完整原始碼，在隔離目錄基於 Linux Electron 頭檔案重新編譯為 ELF 二進位檔案，再覆蓋回應用程式目錄；
@@ -341,15 +386,15 @@ CodeBuddy IDE CN 基於 VS Code/Electron 開發，其 macOS 應用程式的 `Con
 
 ## 常用自訂設定
 
-如需自訂安裝路徑、切換 Electron 鏡像，可透過以下命令執行：
+如需自訂安裝路徑、切換 Electron 鏡像，可透過以下環境變數搭配 `make build-app` 執行：
 
 ```bash
 # 自訂安裝目錄
-CODEBUDDY_INSTALL_DIR=/opt/tmp/codebuddycn-app bash install.sh
+CODEBUDDY_INSTALL_DIR=/opt/tmp/codebuddycn-app make build-app
 # 切換 Electron 鏡像來源
-ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
+ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ make build-app
 # 自訂 Electron 頭檔案下載位址
-ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
+ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-app
 ```
 
 ## 遷移說明
@@ -436,16 +481,17 @@ AUR package page: <https://aur.archlinux.org/packages/codebuddy-ide-cn>
 ### Other Linux distros (Debian / Ubuntu / Linux Mint / Fedora / openSUSE etc.)
 
 1. Clone this repository to your local Linux machine;
-2. Create a `downloads/` folder in the project root;
-3. Download the official Intel/x64 DMG installer yourself and place it in `downloads/`;
-4. Run:
+2. Run:
 
 ```bash
 make deps
+make download
 make build-app
-make package
+make package    # or make appimage
 make install
 ```
+
+`make download` automatically downloads the Intel/x64 DMG installer from Tencent's official CDN to the `downloads/` directory. If an older DMG already exists, it is moved to `downloads/backups/` first. You can also skip this step and manually download the DMG from the official website and place it in `downloads/`.
 
 `scripts/install-deps.sh` automatically detects the package manager (`apt`, `dnf5`, `dnf`, `pacman`, `zypper`) and installs all dependencies needed for DMG extraction, Electron runtime download, native module rebuilding and package generation.
 
@@ -461,12 +507,23 @@ The project fully implements the core Linux-side conversion and packaging workfl
 - Update Linux platform-adapted dependencies such as `@vscode/ripgrep`;
 - Auto-generate Linux system launcher and desktop entry files;
 - Generate distro-native `.deb`, `.rpm` or `.pkg.tar.zst` packages;
+- Support generating universal AppImage format (`make appimage`) that runs without installation;
 - Distributed through AUR as `codebuddy-ide-cn` for one-click installation on Arch-based distros.
 
 > Testing scope: fully tested on Debian-based (Linux Mint 22.3), Arch-based (CachyOS), and Fedora-based (Fedora 44) systems.
-> No auto-update feature is integrated. To update, manually download the latest official DMG and re-run the build flow; AUR users get updates via standard `yay -Syu` once the AUR package is bumped.
+> No auto-update feature is integrated. To update, run `make download` to fetch the latest official DMG and re-run the build flow; AUR users get updates via standard `yay -Syu` or `paru -Syu` once the AUR package is bumped.
 
 ## Build & Run
+
+### Download Official DMG
+
+Automatically download the Intel/x64 DMG installer from Tencent's official CDN to the `downloads/` directory:
+
+```bash
+make download
+```
+
+If an older DMG already exists in `downloads/`, it is moved to `downloads/backups/` before downloading the new one. You can also skip this step and manually download the DMG from the official website and place it in `downloads/`.
 
 ### Recommended Build Method
 
@@ -499,6 +556,16 @@ make package
 make install
 ```
 
+### Build AppImage
+
+Generate a universal AppImage that runs without installation (automatically triggers `build-app`):
+
+```bash
+make appimage
+```
+
+The resulting AppImage is located at `dist/codebuddy-ide-cn-x86_64.AppImage`. The first build automatically downloads the `linuxdeploy` tool to `build/tools/` cache.
+
 ### Clean Build Artifacts
 
 Remove all generated temporary files and application directories:
@@ -511,7 +578,7 @@ make clean
 
 This project references the local conversion and packaging logic of `codex-desktop-linux`, but **does not port its auto-update module**. The core workflow:
 
-1. Take the official macOS DMG installer (provided by the user or fetched by the AUR package from Tencent's CDN) as the input source;
+1. Take the official macOS DMG installer (provided by the user, or fetched via `make download` / the AUR package from Tencent's official CDN) as the input source;
 2. Only extract the core Electron application payload without redistributing any official software content;
 3. Replace the macOS Electron runtime with the matching Linux Electron runtime;
 4. **Recompile native Node modules from source**: because the pre-packaged native modules in the macOS DMG (e.g., `node-pty`) are stripped of C++ source files and build configurations (which causes direct `@electron/rebuild` to fail), this tool downloads each module's full source from npm and rebuilds it as Linux ELF binaries against the Linux Electron headers in an isolated directory, then replaces the original modules;
@@ -523,13 +590,15 @@ CodeBuddy IDE CN is built on VS Code/Electron. Cross-platform JavaScript core co
 
 ## Useful Custom Configurations
 
+To customize the installation path or switch Electron mirrors, pass environment variables to `make build-app`:
+
 ```bash
 # Custom installation directory
-CODEBUDDY_INSTALL_DIR=/opt/tmp/codebuddycn-app bash install.sh
+CODEBUDDY_INSTALL_DIR=/opt/tmp/codebuddycn-app make build-app
 # Switch Electron mirror source
-ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ bash install.sh
+ELECTRON_MIRROR=https://npmmirror.com/mirrors/electron/ make build-app
 # Custom Electron headers download URL
-ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist bash install.sh
+ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-app
 ```
 
 ## Migration Notes
