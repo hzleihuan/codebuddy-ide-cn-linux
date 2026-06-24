@@ -46,6 +46,8 @@ Codebuddy IDE CN（国内版）的非官方 Linux 自动化移植与安装构建
 
 当前转换流程基于官方 CodeBuddy IDE CN **4.9.14**（构建号 `31414011-6230de8a-cn`）验证通过。更高版本的 DMG 可能因为上游代码结构变化导致流程失败。如遇到构建失败或运行异常，请在本仓库提 Issue 并附上所使用的 DMG 版本号。
 
+各版本间的 Electron 升级、Node 模块变更与移植处理详情，请查阅 [版本变更记录](docs/changelog/)。
+
 ## 快速安装
 
 ### Arch Linux / CachyOS / Manjaro 等 Arch 系发行版
@@ -250,6 +252,8 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-ap
 
 當前轉換流程基於官方 CodeBuddy IDE CN **4.9.14**（構建號 `31414011-6230de8a-cn`）驗證通過。更高版本的 DMG 可能因為上游程式碼結構變化導致流程失敗。如遇到構建失敗或執行異常，請在本儲存庫提 Issue 並附上所使用的 DMG 版本號。
 
+各版本間的 Electron 升級、Node 模組變更與移植處理詳情，請查閱[版本變更記錄](docs/changelog/)。
+
 ## 快速安裝
 
 ### Arch Linux / CachyOS / Manjaro 等 Arch 系發行版
@@ -453,6 +457,8 @@ If you encounter bugs, please submit an Issue here. Do not contact Tencent offic
 ## Version Compatibility
 
 The current conversion workflow has been verified against official CodeBuddy IDE CN **4.9.14** (build `31414011-6230de8a-cn`). Higher versions of the DMG may have upstream code structure changes that prevent the flow from completing. If you encounter build failures or runtime issues, please file an Issue with the DMG version number.
+
+For details on Electron upgrades, Node module changes and porting notes between versions, see the [Changelog](docs/changelog/).
 
 ## Quick Install
 
