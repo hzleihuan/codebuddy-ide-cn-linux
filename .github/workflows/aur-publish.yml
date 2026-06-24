@@ -1,0 +1,105 @@
+name: Publish to AUR
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  aur-publish:
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+    steps:
+      - name: Install Git, SSH, and Pacman utilities
+        run: |
+          pacman -Syu --noconfirm git openssh pacman-contrib curl
+
+      - name: Checkout Helper Repo
+        uses: actions/checkout@v4
+
+      - name: Parse versions and update PKGBUILD variables
+        run: |
+          # Extract variables from Helper repo
+          CB_VERSION=$(grep -E '^CB_VERSION\s*:=' Makefile | awk -F':=' '{print $2}' | tr -d '[:space:]')
+          CB_BUILD=$(grep -E '^CB_BUILD\s*:=' Makefile | awk -F':=' '{print $2}' | tr -d '[:space:]')
+          CB_HASH=$(grep -E '^CB_HASH\s*:=' Makefile | awk -F':=' '{print $2}' | tr -d '[:space:]')
+          ELECTRON_VERSION=$(sed -n 's/.*ELECTRON_VERSION="\${ELECTRON_VERSION:-\([^}]*\)}".*/\1/p' install.sh)
+          HELPER_COMMIT=${{ github.sha }}
+
+          echo "==========================================="
+          echo "Updating PKGBUILD with target versions:"
+          echo "CB_VERSION:       $CB_VERSION"
+          echo "CB_BUILD:         $CB_BUILD"
+          echo "CB_HASH:          $CB_HASH"
+          echo "ELECTRON_VERSION: $ELECTRON_VERSION"
+          echo "HELPER_COMMIT:    $HELPER_COMMIT"
+          echo "==========================================="
+
+          # Modify PKGBUILD variables dynamically
+          sed -i "s/^_cb_ver=.*/_cb_ver=${CB_VERSION}/" .aur/PKGBUILD
+          sed -i "s/^_cb_build=.*/_cb_build=${CB_BUILD}/" .aur/PKGBUILD
+          sed -i "s/^_cb_hash=.*/_cb_hash=${CB_HASH}/" .aur/PKGBUILD
+          sed -i "s/^_electron_version=.*/_electron_version=${ELECTRON_VERSION}/" .aur/PKGBUILD
+          sed -i "s/^_helper_commit=.*/_helper_commit='${HELPER_COMMIT}'/" .aur/PKGBUILD
+
+      - name: Regenerate Checksums and .SRCINFO
+        run: |
+          # Create a non-root user 'builder' to run makepkg/updpkgsums
+          useradd -m builder
+          echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+          
+          # Grant builder user write permission to the workspace
+          chown -R builder:builder .
+          
+          # Fetch sources and update checksums in PKGBUILD
+          cd .aur
+          su builder -c "updpkgsums"
+          
+          # Generate .SRCINFO
+          su builder -c "makepkg --printsrcinfo > .SRCINFO"
+
+      - name: Setup SSH for AUR deployment
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.AUR_PRIVATE_KEY }}" > ~/.ssh/aur_key
+          chmod 600 ~/.ssh/aur_key
+          ssh-keyscan -t ed25519 aur.archlinux.org >> ~/.ssh/known_hosts
+          
+          # Configure SSH client to use the private key for aur.archlinux.org
+          cat >> ~/.ssh/config <<EOF
+          Host aur.archlinux.org
+            IdentityFile ~/.ssh/aur_key
+            User aur
+          EOF
+
+      - name: Clone AUR Repo, Update, and Push
+        run: |
+          # Git safety configuration for container environments
+          git config --global --add safe.directory '*'
+          
+          # Git identity setup
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          
+          # Clone the upstream AUR repository
+          git clone ssh://aur@aur.archlinux.org/codebuddy-ide-cn.git aur-repo
+          
+          # Overwrite packaging files with the updated ones
+          cp .aur/PKGBUILD aur-repo/
+          cp .aur/.SRCINFO aur-repo/
+          cp .aur/LICENSE.notice aur-repo/
+          
+          # Commit and Push if there are updates
+          cd aur-repo
+          if git diff --quiet; then
+            echo "No changes detected. AUR repository is already up-to-date."
+          else
+            git add PKGBUILD .SRCINFO LICENSE.notice
+            CB_VERSION=$(grep -E '^_cb_ver=' PKGBUILD | cut -d'=' -f2)
+            CB_BUILD=$(grep -E '^_cb_build=' PKGBUILD | cut -d'=' -f2)
+            
+            git commit -m "Update to v${CB_VERSION}.${CB_BUILD} (Helper commit: ${{ github.sha }})"
+            git push origin master
+          fi
