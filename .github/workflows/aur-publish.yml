@@ -65,14 +65,14 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.AUR_PRIVATE_KEY }}" > ~/.ssh/aur_key
           chmod 600 ~/.ssh/aur_key
-          ssh-keyscan -t ed25519 aur.archlinux.org >> ~/.ssh/known_hosts
+          ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
           
           # Configure SSH client to use the private key for aur.archlinux.org
           cat >> ~/.ssh/config <<EOF
-          Host aur.archlinux.org
-            IdentityFile ~/.ssh/aur_key
-            User aur
-          EOF
+Host aur.archlinux.org
+  IdentityFile ~/.ssh/aur_key
+  User aur
+EOF
 
       - name: Clone AUR Repo, Update, and Push
         run: |
