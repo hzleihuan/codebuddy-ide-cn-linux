@@ -65,12 +65,17 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.AUR_PRIVATE_KEY }}" > ~/.ssh/aur_key
           chmod 600 ~/.ssh/aur_key
-          ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
+          # Add AUR host keys from GitHub Secrets to prevent verification errors
+          echo "${{ secrets.AUR_HOST_KEYS }}" >> ~/.ssh/known_hosts
           
           # Configure SSH client to use the private key for aur.archlinux.org
           echo "Host aur.archlinux.org" >> ~/.ssh/config
           echo "  IdentityFile ~/.ssh/aur_key" >> ~/.ssh/config
           echo "  User aur" >> ~/.ssh/config
+          
+          # Copy to /root/.ssh to ensure compatibility with container environments
+          mkdir -p /root/.ssh
+          cp -r ~/.ssh/* /root/.ssh/
 
       - name: Clone AUR Repo, Update, and Push
         run: |
