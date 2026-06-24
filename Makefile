@@ -2,9 +2,9 @@ SHELL := /bin/bash
 
 # ── CodeBuddy DMG download config ──────────────────────────────────
 # Only update these three values when a new version is released.
-CB_VERSION  := 4.9.13
-CB_BUILD    := 30241433
-CB_HASH     := 0acccacc
+CB_VERSION  := 4.9.14
+CB_BUILD    := 31414011
+CB_HASH     := 6230de8a
 # ───────────────────────────────────────────────────────────────────
 CB_BASE_URL     := https://download.codebuddy.cn/aiide/darwin-x64/CodeBuddy-darwin-x64-
 CB_SUFFIX       := -cn.dmg

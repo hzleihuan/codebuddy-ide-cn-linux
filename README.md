@@ -10,13 +10,13 @@ Codebuddy IDE CN（国内版）的非官方 Linux 自动化移植与安装构建
 
 </div>
 <p align="center">
-  <img src="https://img.shields.io/badge/deb-Ubuntu_%7C_Debian_%7C_Linux_Mint-A81D33?style=flat&logo=debian&logoColor=white" alt="Debian Ubuntu Support">
-  <img src="https://img.shields.io/badge/arch-ArchLinux_%7C_CachyOS_%7C_Manjaro-1793D1?style=flat&logo=arch-linux&logoColor=white" alt="AUR Package">
+  <img src="https://img.shields.io/badge/deb-Ubuntu_%7C_Debian-A81D33?style=flat&logo=debian&logoColor=white" alt="Debian Ubuntu Support">
+  <img src="https://img.shields.io/badge/arch-ArchLinux_%7C_CachyOS-1793D1?style=flat&logo=arch-linux&logoColor=white" alt="AUR Package">
   <img src="https://img.shields.io/badge/rpm-Fedora_%7C_RHEL-006699?style=flat&logo=fedora&logoColor=white" alt="Fedora RHEL Support">
   <img src="https://img.shields.io/badge/AppImage-All_Distros-007ACC?style=flat&logo=appimage&logoColor=white" alt="AppImage Support">
   <br>
-  <img src="https://img.shields.io/badge/版本适配-v4.9.13-0052D9?style=flat&logo=probot&logoColor=white" alt="Supported Version">
-  <img src="https://img.shields.io/badge/Electron-v34.5.1-47307B?style=flat&logo=electron&logoColor=white" alt="Electron Version">
+  <img src="https://img.shields.io/badge/版本适配-v4.9.14-0052D9?style=flat&logo=probot&logoColor=white" alt="Supported Version">
+  <img src="https://img.shields.io/badge/Electron-v35.6.0-47307B?style=flat&logo=electron&logoColor=white" alt="Electron Version">
   <img src="https://img.shields.io/badge/状态-Unofficial-d73a49?style=flat" alt="Status Unofficial">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat" alt="License MIT">
   <br>
@@ -44,7 +44,7 @@ Codebuddy IDE CN（国内版）的非官方 Linux 自动化移植与安装构建
 
 ## 版本适配说明
 
-当前转换流程基于官方 CodeBuddy IDE CN **4.9.13**（构建号 `30241433-0acccacc-cn`）验证通过。更高版本的 DMG 可能因为上游代码结构变化导致流程失败。如遇到构建失败或运行异常，请在本仓库提 Issue 并附上所使用的 DMG 版本号。
+当前转换流程基于官方 CodeBuddy IDE CN **4.9.14**（构建号 `31414011-6230de8a-cn`）验证通过。更高版本的 DMG 可能因为上游代码结构变化导致流程失败。如遇到构建失败或运行异常，请在本仓库提 Issue 并附上所使用的 DMG 版本号。
 
 ## 快速安装
 
@@ -248,7 +248,7 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-ap
 
 ## 版本適配說明
 
-當前轉換流程基於官方 CodeBuddy IDE CN **4.9.13**（構建號 `30241433-0acccacc-cn`）驗證通過。更高版本的 DMG 可能因為上游程式碼結構變化導致流程失敗。如遇到構建失敗或執行異常，請在本儲存庫提 Issue 並附上所使用的 DMG 版本號。
+當前轉換流程基於官方 CodeBuddy IDE CN **4.9.14**（構建號 `31414011-6230de8a-cn`）驗證通過。更高版本的 DMG 可能因為上游程式碼結構變化導致流程失敗。如遇到構建失敗或執行異常，請在本儲存庫提 Issue 並附上所使用的 DMG 版本號。
 
 ## 快速安裝
 
@@ -452,7 +452,7 @@ If you encounter bugs, please submit an Issue here. Do not contact Tencent offic
 
 ## Version Compatibility
 
-The current conversion workflow has been verified against official CodeBuddy IDE CN **4.9.13** (build `30241433-0acccacc-cn`). Higher versions of the DMG may have upstream code structure changes that prevent the flow from completing. If you encounter build failures or runtime issues, please file an Issue with the DMG version number.
+The current conversion workflow has been verified against official CodeBuddy IDE CN **4.9.14** (build `31414011-6230de8a-cn`). Higher versions of the DMG may have upstream code structure changes that prevent the flow from completing. If you encounter build failures or runtime issues, please file an Issue with the DMG version number.
 
 ## Quick Install
 

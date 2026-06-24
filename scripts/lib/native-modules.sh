@@ -18,6 +18,7 @@ remove_known_wrong_platform_modules() {
     rm -rf "$app_dir/node_modules/@vscode/windows-mutex" 2>/dev/null || true
     rm -rf "$app_dir/node_modules/@vscode/windows-process-tree" 2>/dev/null || true
     rm -rf "$app_dir/node_modules/@vscode/windows-registry" 2>/dev/null || true
+    rm -f "$app_dir/node_modules/@vscode/deviceid/build/Release/windows.node" 2>/dev/null || true
     find "$app_dir/node_modules" -path "*/prebuilds/darwin-*" -type d -prune -exec rm -rf {} + 2>/dev/null || true
 }
 
@@ -180,6 +181,8 @@ rebuild_native_modules() {
         "@vscode/spdlog"
         "@vscode/sqlite3"
         "kerberos"
+        "native-is-elevated"
+        "@vscode/policy-watcher"
     )
 
     info "Rebuilding native modules for Electron $ELECTRON_VERSION"
