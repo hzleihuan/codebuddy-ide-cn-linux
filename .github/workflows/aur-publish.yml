@@ -68,11 +68,9 @@ jobs:
           ssh-keyscan aur.archlinux.org >> ~/.ssh/known_hosts
           
           # Configure SSH client to use the private key for aur.archlinux.org
-          cat >> ~/.ssh/config <<EOF
-Host aur.archlinux.org
-  IdentityFile ~/.ssh/aur_key
-  User aur
-EOF
+          echo "Host aur.archlinux.org" >> ~/.ssh/config
+          echo "  IdentityFile ~/.ssh/aur_key" >> ~/.ssh/config
+          echo "  User aur" >> ~/.ssh/config
 
       - name: Clone AUR Repo, Update, and Push
         run: |
