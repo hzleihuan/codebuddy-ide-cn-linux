@@ -19,6 +19,18 @@ remove_known_wrong_platform_modules() {
     rm -rf "$app_dir/node_modules/@vscode/windows-process-tree" 2>/dev/null || true
     rm -rf "$app_dir/node_modules/@vscode/windows-registry" 2>/dev/null || true
     rm -f "$app_dir/node_modules/@vscode/deviceid/build/Release/windows.node" 2>/dev/null || true
+
+    # Clean up proprietary @tencent/qimei-node which is only active on Windows/macOS
+    rm -rf "$app_dir/node_modules/@tencent/qimei-node/build" 2>/dev/null || true
+    rm -rf "$app_dir/node_modules/@tencent/qimei-node/src/mac" 2>/dev/null || true
+    rm -rf "$app_dir/node_modules/@tencent/qimei-node/src/win" 2>/dev/null || true
+
+    # Clean up non-Linux prebuilts from koffi (which is used by qimei-node on Windows)
+    if [ -d "$app_dir/node_modules/koffi/build/koffi" ]; then
+        find "$app_dir/node_modules/koffi/build/koffi" -mindepth 1 -maxdepth 1 \
+            ! -name "linux_x64" ! -name "linux_arm64" -exec rm -rf {} + 2>/dev/null || true
+    fi
+
     find "$app_dir/node_modules" -path "*/prebuilds/darwin-*" -type d -prune -exec rm -rf {} + 2>/dev/null || true
 }
 

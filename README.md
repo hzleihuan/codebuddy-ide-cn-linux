@@ -15,7 +15,7 @@ Codebuddy IDE CN（国内版）的非官方 Linux 自动化移植与安装构建
   <img src="https://img.shields.io/badge/rpm-Fedora_%7C_RHEL-006699?style=flat&logo=fedora&logoColor=white" alt="Fedora RHEL Support">
   <img src="https://img.shields.io/badge/AppImage-All_Distros-007ACC?style=flat&logo=appimage&logoColor=white" alt="AppImage Support">
   <br>
-  <img src="https://img.shields.io/badge/版本适配-v4.9.14-0052D9?style=flat&logo=probot&logoColor=white" alt="Supported Version">
+  <img src="https://img.shields.io/badge/版本适配-v4.9.15-0052D9?style=flat&logo=probot&logoColor=white" alt="Supported Version">
   <img src="https://img.shields.io/badge/Electron-v35.6.0-47307B?style=flat&logo=electron&logoColor=white" alt="Electron Version">
   <img src="https://img.shields.io/badge/状态-Unofficial-d73a49?style=flat" alt="Status Unofficial">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat" alt="License MIT">
@@ -44,7 +44,7 @@ Codebuddy IDE CN（国内版）的非官方 Linux 自动化移植与安装构建
 
 ## 版本适配说明
 
-当前转换流程基于官方 CodeBuddy IDE CN **4.9.14**（构建号 `31414011-6230de8a-cn`）验证通过。更高版本的 DMG 可能因为上游代码结构变化导致流程失败。如遇到构建失败或运行异常，请在本仓库提 Issue 并附上所使用的 DMG 版本号。
+当前转换流程基于官方 CodeBuddy IDE CN **4.9.15**（构建号 `31887257-cbd94294-cn`）验证通过。更高版本的 DMG 可能因为上游代码结构变化导致流程失败。如遇到构建失败或运行异常，请在本仓库提 Issue 并附上所使用的 DMG 版本号。
 
 各版本间的 Electron 升级、Node 模块变更与移植处理详情，请查阅 [版本变更记录](docs/changelog/)。
 
@@ -87,7 +87,7 @@ make install
 
 `make download` 会自动从腾讯官方 CDN 下载 Intel/x64 架构的 DMG 安装包到 `downloads/` 目录。如已有旧版 DMG，会自动移至 `downloads/backups/` 备份。你也可以手动从官方网站下载 DMG 放入 `downloads/` 目录替代此步骤。
 
-`scripts/install-deps.sh` 会自动识别当前系统的包管理器（支持 `apt`、`dnf5`、`dnf`、`pacman`、`zypper`），一键安装 DMG 提取、Electron 运行时下载、原生模块重建、安装包生成所需的全部依赖。
+`make deps` 会自动识别当前系统的包管理器（支持 `apt`、`dnf5`、`dnf`、`pacman`、`zypper`），一键安装 DMG 提取、Electron 运行时下载、原生模块重建、安装包生成所需的全部依赖。
 
 ## 项目状态
 
@@ -250,7 +250,7 @@ ELECTRON_HEADERS_URL=https://artifacts.electronjs.org/headers/dist make build-ap
 
 ## 版本適配說明
 
-當前轉換流程基於官方 CodeBuddy IDE CN **4.9.14**（構建號 `31414011-6230de8a-cn`）驗證通過。更高版本的 DMG 可能因為上游程式碼結構變化導致流程失敗。如遇到構建失敗或執行異常，請在本儲存庫提 Issue 並附上所使用的 DMG 版本號。
+當前轉換流程基於官方 CodeBuddy IDE CN **4.9.15**（構建號 `31887257-cbd94294-cn`）驗證通過。更高版本的 DMG 可能因為上游程式碼結構變化導致流程失敗。如遇到構建失敗或執行異常，請在本儲存庫提 Issue 並附上所使用的 DMG 版本號。
 
 各版本間的 Electron 升級、Node 模組變更與移植處理詳情，請查閱[版本變更記錄](docs/changelog/)。
 
@@ -293,7 +293,7 @@ make install
 
 `make download` 會自動從騰訊官方 CDN 下載 Intel/x64 架構的 DMG 安裝包到 `downloads/` 目錄。如已有舊版 DMG，會自動移至 `downloads/backups/` 備份。你也可以手動從官方網站下載 DMG 放入 `downloads/` 目錄替代此步驟。
 
-`scripts/install-deps.sh` 會自動辨識當前系統的套件管理器（支援 `apt`、`dnf5`、`dnf`、`pacman`、`zypper`），一鍵安裝 DMG 提取、Electron 執行時下載、原生模組重建、安裝包生成所需的全部相依性。
+`make deps` 會自動辨識當前系統的套件管理器（支援 `apt`、`dnf5`、`dnf`、`pacman`、`zypper`），一鍵安裝 DMG 提取、Electron 執行時下載、原生模組重建、安裝包生成所需的全部相依性。
 
 ## 專案狀態
 
@@ -456,7 +456,7 @@ If you encounter bugs, please submit an Issue here. Do not contact Tencent offic
 
 ## Version Compatibility
 
-The current conversion workflow has been verified against official CodeBuddy IDE CN **4.9.14** (build `31414011-6230de8a-cn`). Higher versions of the DMG may have upstream code structure changes that prevent the flow from completing. If you encounter build failures or runtime issues, please file an Issue with the DMG version number.
+The current conversion workflow has been verified against official CodeBuddy IDE CN **4.9.15** (build `31887257-cbd94294-cn`). Higher versions of the DMG may have upstream code structure changes that prevent the flow from completing. If you encounter build failures or runtime issues, please file an Issue with the DMG version number.
 
 For details on Electron upgrades, Node module changes and porting notes between versions, see the [Changelog](docs/changelog/).
 
@@ -499,7 +499,7 @@ make install
 
 `make download` automatically downloads the Intel/x64 DMG installer from Tencent's official CDN to the `downloads/` directory. If an older DMG already exists, it is moved to `downloads/backups/` first. You can also skip this step and manually download the DMG from the official website and place it in `downloads/`.
 
-`scripts/install-deps.sh` automatically detects the package manager (`apt`, `dnf5`, `dnf`, `pacman`, `zypper`) and installs all dependencies needed for DMG extraction, Electron runtime download, native module rebuilding and package generation.
+`make deps` automatically detects the package manager (`apt`, `dnf5`, `dnf`, `pacman`, `zypper`) and installs all dependencies needed for DMG extraction, Electron runtime download, native module rebuilding and package generation.
 
 ## Project Status
 
