@@ -1,0 +1,45 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Generate Release Notes
+        run: |
+          TAG_VER="${{ github.ref_name }}"
+          # Strip 'v' prefix if it exists (e.g., v4.9.15 -> 4.9.15)
+          VER="${TAG_VER#v}"
+          
+          # Try to find the matching changelog file (e.g., docs/changelog/*-to-4.9.15.md)
+          CHANGELOG_FILE=$(find docs/changelog -name "*-to-${VER}.md" | head -n 1)
+          
+          echo "适配上游 ${TAG_VER} 的版本。" > release_notes.md
+          echo "" >> release_notes.md
+          echo "⚠️ **说明**：本项目不分发重新打包的官方二进制安装包（以规避再分发的版权风险）。请在下方 **Assets** 列表中下载本项目对应标签版本的自动移植与安装构建脚本工具压缩包（\`Source code (zip)\` / \`Source code (tar.gz)\`），并解压至本地根据 README 指引执行构建与安装。" >> release_notes.md
+          echo "" >> release_notes.md
+          echo "详细变更记录与移植适配细节，请查阅项目中的：" >> release_notes.md
+          
+          if [ -n "$CHANGELOG_FILE" ] && [ -f "$CHANGELOG_FILE" ]; then
+            FILE_NAME=$(basename "$CHANGELOG_FILE")
+            echo "👉 [${FILE_NAME} 详细变更记录](https://github.com/${{ github.repository }}/blob/main/docs/changelog/${FILE_NAME})" >> release_notes.md
+          else
+            echo "👉 [版本变更记录目录](https://github.com/${{ github.repository }}/blob/main/docs/changelog/)" >> release_notes.md
+          fi
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ github.ref_name }}" \
+            --title "${{ github.ref_name }}" \
+            --notes-file release_notes.md
