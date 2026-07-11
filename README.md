@@ -18,7 +18,7 @@ Codebuddy IDE CN（国内版）的非官方 **loong64 (LoongArch)** Linux 自动
   <br>
   <img src="https://img.shields.io/badge/架构-loong64-6C2DC7?style=flat" alt="Architecture loong64">
   <img src="https://img.shields.io/badge/版本适配-v4.10.0-0052D9?style=flat&logo=probot&logoColor=white" alt="Supported Version">
-  <img src="https://img.shields.io/badge/Electron-v35.6.0-47307B?style=flat&logo=electron&logoColor=white" alt="Electron Version">
+  <img src="https://img.shields.io/badge/Electron-v37.7.0-47307B?style=flat&logo=electron&logoColor=white" alt="Electron Version">
   <img src="https://img.shields.io/badge/状态-Unofficial-d73a49?style=flat" alt="Status Unofficial">
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat" alt="License MIT">
 </p>
