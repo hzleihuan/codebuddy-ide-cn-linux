@@ -9,14 +9,32 @@ REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_DIR="${APP_DIR:-$REPO_DIR/codebuddycn-app}"
 DIST_DIR="${DIST_DIR:-$REPO_DIR/dist}"
 PKG_ROOT="${PKG_ROOT:-$DIST_DIR/deb-root}"
+
+# Extract version info from the downloaded DMG filename.
+# DMG filename pattern: CodeBuddy-darwin-x64-{version}.{build}-{hash}-cn.dmg
+# Returns: {version}.{build}--{hash}  (e.g. 4.9.15.31887257--cbd94294)
+extract_dmg_version() {
+    local dmg_file downloads_dir="$REPO_DIR/downloads"
+    dmg_file="$(find "$downloads_dir" -maxdepth 1 -name "*.dmg" -print 2>/dev/null | head -n 1)"
+    if [ -z "$dmg_file" ]; then
+        return 1
+    fi
+    local basename="${dmg_file##*/}"
+    if [[ "$basename" =~ CodeBuddy-darwin-x64-([0-9]+\.[0-9]+\.[0-9]+)\.([0-9]+)-([0-9a-f]+)-cn\.dmg ]]; then
+        echo "${BASH_REMATCH[1]}.${BASH_REMATCH[2]}--${BASH_REMATCH[3]}"
+        return 0
+    fi
+    return 1
+}
+
 PACKAGE_NAME="${PACKAGE_NAME:-codebuddy-ide-cn}"
-PACKAGE_VERSION="${PACKAGE_VERSION:-$(date -u +%Y.%m.%d.%H%M%S)}"
+PACKAGE_VERSION="${PACKAGE_VERSION:-$(extract_dmg_version || date -u +%Y.%m.%d.%H%M%S)}"
 DESKTOP_TEMPLATE="$REPO_DIR/packaging/linux/codebuddy-ide-cn.desktop"
 CONTROL_TEMPLATE="$REPO_DIR/packaging/linux/control"
 
 map_arch() {
     case "$(dpkg --print-architecture)" in
-        amd64|arm64|armhf) dpkg --print-architecture ;;
+        amd64|arm64|armhf|loong64) dpkg --print-architecture ;;
         *) error "Unsupported Debian architecture: $(dpkg --print-architecture)" ;;
     esac
 }

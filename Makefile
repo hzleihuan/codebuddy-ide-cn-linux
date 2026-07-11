@@ -11,8 +11,9 @@ CB_SUFFIX       := -cn.dmg
 DMG_URL         := $(CB_BASE_URL)$(CB_VERSION).$(CB_BUILD)-$(CB_HASH)$(CB_SUFFIX)
 
 # ── AppImage config ───────────────────────────────────────────────
-LINUXDEPLOY_URL := https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-x86_64.AppImage
-APPIMAGE_OUT    := dist/codebuddy-ide-cn-x86_64.AppImage
+LINUXDEPLOY_ARCH := $(shell uname -m)
+LINUXDEPLOY_URL  := https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-$(LINUXDEPLOY_ARCH).AppImage
+APPIMAGE_OUT     := dist/codebuddy-ide-cn-$(LINUXDEPLOY_ARCH).AppImage
 # ───────────────────────────────────────────────────────────────────
 
 .PHONY: help deps download build-app appimage run-app deb rpm pacman package install clean check

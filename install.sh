@@ -225,7 +225,12 @@ main() {
     local input_path app_bundle
     input_path="$(resolve_input_path "$PROVIDED_INPUT")"
     app_bundle="$(resolve_app_bundle "$input_path")"
-    ELECTRON_VERSION="$(detect_electron_version "$app_bundle")"
+    if [ -n "${FORCE_ELECTRON_VERSION:-}" ]; then
+        ELECTRON_VERSION="$FORCE_ELECTRON_VERSION"
+        info "Using forced Electron version: $ELECTRON_VERSION"
+    else
+        ELECTRON_VERSION="$(detect_electron_version "$app_bundle")"
+    fi
 
     info "Using app bundle: $app_bundle"
     info "Using Electron: $ELECTRON_VERSION"

@@ -28,7 +28,8 @@ remove_known_wrong_platform_modules() {
     # Clean up non-Linux prebuilts from koffi (which is used by qimei-node on Windows)
     if [ -d "$app_dir/node_modules/koffi/build/koffi" ]; then
         find "$app_dir/node_modules/koffi/build/koffi" -mindepth 1 -maxdepth 1 \
-            ! -name "linux_x64" ! -name "linux_arm64" -exec rm -rf {} + 2>/dev/null || true
+            ! -name "linux_x64" ! -name "linux_arm64" ! -name "linux_loong64" \
+            ! -name "linux_riscv64d" -exec rm -rf {} + 2>/dev/null || true
     fi
 
     find "$app_dir/node_modules" -path "*/prebuilds/darwin-*" -type d -prune -exec rm -rf {} + 2>/dev/null || true
@@ -61,7 +62,6 @@ refresh_npm_package() {
     mkdir -p "$(dirname "$package_path")"
     cp -a "$source_path" "$package_path"
 }
-
 refresh_platform_packages() {
     local app_dir="$1"
 

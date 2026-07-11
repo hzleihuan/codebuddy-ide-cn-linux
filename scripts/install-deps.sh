@@ -91,7 +91,7 @@ install_nodesource_nodejs() {
 
     apt_arch="$(dpkg --print-architecture)"
     case "$apt_arch" in
-        amd64|arm64|armhf) ;;
+        amd64|arm64|armhf|loong64) ;;
         *) error "NodeSource does not support apt architecture: $apt_arch" ;;
     esac
 
