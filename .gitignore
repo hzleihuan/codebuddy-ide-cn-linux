@@ -26,6 +26,9 @@ electron/
 *.tmp
 *.part
 
+# CodeBuddy IDE local project data.
+.codebuddy/
+
 # OS/editor noise.
 .DS_Store
 Thumbs.db

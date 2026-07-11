@@ -27,7 +27,7 @@ electron_arch() {
     esac
 }
 
-# Map a DMG-detected Electron version to the closest available loong64 build.
+# Map a detected Electron version to the closest available loong64 build.
 # Strategy: prefer the same major, then the nearest lower major (stability
 # over bleeding-edge).  Within a major, pick the highest available version.
 map_loong64_electron_version() {

@@ -14,17 +14,17 @@ PROVIDED_INPUT=""
 FRESH=0
 
 . "$SCRIPT_DIR/scripts/lib/common.sh"
-. "$SCRIPT_DIR/scripts/lib/dmg.sh"
+. "$SCRIPT_DIR/scripts/lib/deb.sh"
 . "$SCRIPT_DIR/scripts/lib/electron.sh"
 . "$SCRIPT_DIR/scripts/lib/native-modules.sh"
 
 usage() {
     cat <<'HELP'
-Usage: ./install.sh [--fresh] [path/to/CodeBuddy.dmg | path/to/CodeBuddy CN.app]
+Usage: ./install.sh [--fresh] [path/to/CodeBuddy.deb]
 
-Builds a local Linux Electron app from a user-owned official CodeBuddy IDE CN
-macOS Intel/x64 DMG or extracted .app bundle. With no path, the installer
-expects exactly one official DMG in downloads/.
+Builds a loong64 Linux Electron app from the official CodeBuddy IDE CN
+Linux x64 .deb package.  With no path, the installer expects exactly one
+official .deb in downloads/.
 
 Environment:
   CODEBUDDY_INSTALL_DIR   Output app directory (default: ./codebuddycn-app)
@@ -60,10 +60,10 @@ check_deps() {
     require_cmd python3
     require_cmd curl
     require_cmd unzip
+    require_cmd dpkg-deb
     require_cmd node
     require_cmd npm
     require_cmd npx
-    find_7z >/dev/null
 }
 
 prepare_install_dir() {
@@ -79,87 +79,16 @@ prepare_install_dir() {
 }
 
 copy_app_payload() {
-    local app_bundle="$1"
-    local resources_dir="$app_bundle/Contents/Resources"
-    local app_payload="$resources_dir/app"
+    local app_dir="$1"
 
-    [ -d "$app_payload" ] || error "Missing app payload: $app_payload"
+    [ -d "$app_dir" ] || error "Missing app payload directory"
+    [ -f "$app_dir/resources/app/package.json" ] || error "No package.json found in app payload"
 
     info "Copying CodeBuddy app payload"
     rm -rf "$INSTALL_DIR/resources/app"
     mkdir -p "$INSTALL_DIR/resources"
-    cp -a "$app_payload" "$INSTALL_DIR/resources/app"
-
-    if [ -f "$resources_dir/node_modules.asar" ]; then
-        cp "$resources_dir/node_modules.asar" "$INSTALL_DIR/resources/" 2>/dev/null || true
-    fi
+    cp -a "$app_dir/resources/app" "$INSTALL_DIR/resources/app"
 }
-
-write_icon() {
-    local app_bundle="$1"
-    local icon_source="$app_bundle/Contents/Resources/CodeBuddy CN.icns"
-    local icon_target="$INSTALL_DIR/.codebuddycn-linux/codebuddycn.png"
-    local icon_tmp="$WORK_DIR/icon"
-
-    mkdir -p "$INSTALL_DIR/.codebuddycn-linux" "$icon_tmp"
-    if [ ! -f "$icon_source" ]; then
-        warn "CodeBuddy icon not found in app bundle"
-        return 0
-    fi
-
-    if command -v icns2png >/dev/null 2>&1; then
-        icns2png -x -s 256 -o "$icon_tmp" "$icon_source" >/dev/null 2>&1 || true
-        local generated
-        generated="$(find "$icon_tmp" -type f -name "*.png" | sort | tail -n 1)"
-        if [ -n "$generated" ]; then
-            cp "$generated" "$icon_target"
-            return 0
-        fi
-    fi
-
-    if command -v magick >/dev/null 2>&1; then
-        magick "$icon_source" "$icon_target" >/dev/null 2>&1 && return 0
-    elif command -v convert >/dev/null 2>&1; then
-        convert "$icon_source" "$icon_target" >/dev/null 2>&1 && return 0
-    fi
-
-    # Fallback: extract PNG directly from ICNS with python3 (no extra libs needed).
-    # ICNS 256x256+ entries embed raw PNG data that we can locate by signature.
-    if python3 - "$icon_source" "$icon_target" <<'PY' 2>/dev/null; then
-import struct, sys
-
-def extract(icns_path, out_path):
-    # ICNS entry types containing PNG, ordered by preference
-    wanted = [b'ic08', b'ic09', b'ic13', b'ic14', b'ic10', b'ic07']
-    png_sig = b'\x89PNG'
-    with open(icns_path, 'rb') as f:
-        if f.read(4) != b'icns':
-            return False
-        total = struct.unpack('>I', f.read(4))[0]
-        found = {}
-        while f.tell() < total:
-            etype = f.read(4)
-            if len(etype) < 4:
-                break
-            esize = struct.unpack('>I', f.read(4))[0]
-            edata = f.read(esize - 8)
-            if etype in wanted and edata[:4] == png_sig:
-                found[etype] = edata
-        for t in wanted:
-            if t in found:
-                with open(out_path, 'wb') as o:
-                    o.write(found[t])
-                return True
-    return False
-
-sys.exit(0 if extract(sys.argv[1], sys.argv[2]) else 1)
-PY
-        return 0
-    fi
-
-    warn "Could not convert CodeBuddy .icns icon; desktop entry will use theme icon name"
-}
-
 
 write_launcher() {
     cat > "$INSTALL_DIR/start.sh" <<EOF
@@ -182,18 +111,13 @@ EOF
 }
 
 write_desktop_entry() {
-    local icon_value="$APP_ID"
-    if [ -f "$INSTALL_DIR/.codebuddycn-linux/codebuddycn.png" ]; then
-        icon_value="$INSTALL_DIR/.codebuddycn-linux/codebuddycn.png"
-    fi
-
     mkdir -p "$INSTALL_DIR/.codebuddycn-linux"
     cat > "$INSTALL_DIR/.codebuddycn-linux/$APP_ID.desktop" <<EOF
 [Desktop Entry]
 Name=$APP_DISPLAY_NAME
-Comment=Run $APP_DISPLAY_NAME on Linux
+Comment=Run $APP_DISPLAY_NAME on Linux (loong64)
 Exec=$INSTALL_DIR/start.sh %F
-Icon=$icon_value
+Icon=$APP_ID
 Type=Application
 Categories=Development;IDE;
 StartupNotify=true
@@ -203,9 +127,9 @@ EOF
 }
 
 write_build_metadata() {
-    local app_bundle="$1"
+    local app_dir="$1"
     local version
-    version="$(read_app_version "$app_bundle")"
+    version="$(read_app_version "$app_dir")"
     mkdir -p "$INSTALL_DIR/.codebuddycn-linux"
     cat > "$INSTALL_DIR/.codebuddycn-linux/build-info.json" <<EOF
 {
@@ -213,6 +137,7 @@ write_build_metadata() {
   "displayName": "$APP_DISPLAY_NAME",
   "upstreamVersion": "$version",
   "electronVersion": "$ELECTRON_VERSION",
+  "arch": "loong64",
   "generatedAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 }
 EOF
@@ -222,27 +147,29 @@ main() {
     parse_args "$@"
     check_deps
 
-    local input_path app_bundle
-    input_path="$(resolve_input_path "$PROVIDED_INPUT")"
-    app_bundle="$(resolve_app_bundle "$input_path")"
+    local deb_path deb_extracted app_dir
+    deb_path="$(resolve_input_path "$PROVIDED_INPUT")"
+    deb_extracted="$(extract_deb "$deb_path")"
+    app_dir="$(locate_app_payload "$deb_extracted")"
+
     if [ -n "${FORCE_ELECTRON_VERSION:-}" ]; then
         ELECTRON_VERSION="$FORCE_ELECTRON_VERSION"
         info "Using forced Electron version: $ELECTRON_VERSION"
     else
-        ELECTRON_VERSION="$(detect_electron_version "$app_bundle")"
+        ELECTRON_VERSION="$(detect_electron_version "$app_dir")"
     fi
 
-    info "Using app bundle: $app_bundle"
+    info "Using .deb: $deb_path"
+    info "Using app payload: $app_dir"
     info "Using Electron: $ELECTRON_VERSION"
 
     prepare_install_dir
     download_electron_runtime
-    copy_app_payload "$app_bundle"
+    copy_app_payload "$app_dir"
     rebuild_native_modules "$INSTALL_DIR/resources/app"
-    write_icon "$app_bundle"
     write_launcher
     write_desktop_entry
-    write_build_metadata "$app_bundle"
+    write_build_metadata "$app_dir"
 
     info "Build complete: $INSTALL_DIR"
     info "Run: $INSTALL_DIR/start.sh"

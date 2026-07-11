@@ -1,38 +1,14 @@
 #!/bin/bash
-# Native Node module rebuilds for the copied VS Code/Electron payload.
+# Native Node module rebuilds for the CodeBuddy app payload.
 #
-# The macOS DMG ships pre-compiled native modules without source code
-# (no binding.gyp / src/).  Running @electron/rebuild on them is a no-op.
-# Instead we download each module's full source from npm, rebuild it for
-# the target Linux Electron, and copy the result back into the app.
+# The official Linux x64 .deb ships pre-compiled native modules for x86_64.
+# To run on loong64, we must rebuild them from source against the loong64
+# Electron headers.  We download each module's full source from npm, rebuild
+# it for the target Electron, and copy the result back into the app.
 
 native_module_report() {
     local app_dir="$1"
     find "$app_dir/node_modules" -name "*.node" -type f 2>/dev/null | sort || true
-}
-
-remove_known_wrong_platform_modules() {
-    local app_dir="$1"
-
-    rm -rf "$app_dir/node_modules/windows-foreground-love" 2>/dev/null || true
-    rm -rf "$app_dir/node_modules/@vscode/windows-mutex" 2>/dev/null || true
-    rm -rf "$app_dir/node_modules/@vscode/windows-process-tree" 2>/dev/null || true
-    rm -rf "$app_dir/node_modules/@vscode/windows-registry" 2>/dev/null || true
-    rm -f "$app_dir/node_modules/@vscode/deviceid/build/Release/windows.node" 2>/dev/null || true
-
-    # Clean up proprietary @tencent/qimei-node which is only active on Windows/macOS
-    rm -rf "$app_dir/node_modules/@tencent/qimei-node/build" 2>/dev/null || true
-    rm -rf "$app_dir/node_modules/@tencent/qimei-node/src/mac" 2>/dev/null || true
-    rm -rf "$app_dir/node_modules/@tencent/qimei-node/src/win" 2>/dev/null || true
-
-    # Clean up non-Linux prebuilts from koffi (which is used by qimei-node on Windows)
-    if [ -d "$app_dir/node_modules/koffi/build/koffi" ]; then
-        find "$app_dir/node_modules/koffi/build/koffi" -mindepth 1 -maxdepth 1 \
-            ! -name "linux_x64" ! -name "linux_arm64" ! -name "linux_loong64" \
-            ! -name "linux_riscv64d" -exec rm -rf {} + 2>/dev/null || true
-    fi
-
-    find "$app_dir/node_modules" -path "*/prebuilds/darwin-*" -type d -prune -exec rm -rf {} + 2>/dev/null || true
 }
 
 refresh_npm_package() {
@@ -69,22 +45,6 @@ refresh_platform_packages() {
     refresh_npm_package "$app_dir" "@parcel/watcher"
 }
 
-purge_macho_native_modules() {
-    local app_dir="$1"
-    local native_file description
-
-    command -v file >/dev/null 2>&1 || return 0
-    while IFS= read -r native_file; do
-        description="$(file "$native_file" 2>/dev/null || true)"
-        case "$description" in
-            *Mach-O*)
-                warn "Removing non-Linux native module: $native_file"
-                rm -f "$native_file"
-                ;;
-        esac
-    done < <(find "$app_dir/node_modules" -name "*.node" -type f 2>/dev/null | sort || true)
-}
-
 # ---------------------------------------------------------------------------
 # read_module_version  –  get version from an in-tree package.json
 # ---------------------------------------------------------------------------
@@ -99,9 +59,9 @@ read_module_version() {
 # ---------------------------------------------------------------------------
 # build_native_module_fresh  –  npm-install from source, rebuild, copy back
 #
-# Because the macOS payload only ships pre-built binaries (no binding.gyp,
-# no src/), we must obtain a *full* source distribution from npm and compile
-# it against the target Electron.
+# Because the x64 .deb only ships pre-built x86_64 binaries (possibly without
+# binding.gyp / src/), we obtain a *full* source distribution from npm and
+# compile it against the target loong64 Electron.
 # ---------------------------------------------------------------------------
 build_native_module_fresh() {
     local app_dir="$1"
@@ -171,9 +131,8 @@ rebuild_native_modules() {
         return 0
     }
 
-    info "Native modules before cleanup:"
+    info "Native modules before rebuild:"
     native_module_report "$app_dir" >&2
-    remove_known_wrong_platform_modules "$app_dir"
     refresh_platform_packages "$app_dir"
 
     # ------------------------------------------------------------------
@@ -219,8 +178,6 @@ rebuild_native_modules() {
         fi
         build_native_module_fresh "$app_dir" "$module_name" "$module_version" 1
     done
-
-    purge_macho_native_modules "$app_dir"
 
     info "Native modules after rebuild:"
     native_module_report "$app_dir" >&2

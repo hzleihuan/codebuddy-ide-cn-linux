@@ -1,19 +1,19 @@
 SHELL := /bin/bash
 
-# ── CodeBuddy DMG download config ──────────────────────────────────
+# ── CodeBuddy Linux .deb download config ──────────────────────────
 # Only update these three values when a new version is released.
-CB_VERSION  := 4.9.15
-CB_BUILD    := 31887257
-CB_HASH     := cbd94294
+CB_VERSION  := 4.10.0
+CB_BUILD    := 32999201
+CB_HASH     := c8bdde62
 # ───────────────────────────────────────────────────────────────────
-CB_BASE_URL     := https://download.codebuddy.cn/aiide/darwin-x64/CodeBuddy-darwin-x64-
-CB_SUFFIX       := -cn.dmg
-DMG_URL         := $(CB_BASE_URL)$(CB_VERSION).$(CB_BUILD)-$(CB_HASH)$(CB_SUFFIX)
+CB_BASE_URL     := https://download.codebuddy.cn/aiide/linux-x64/CodeBuddy-linux-x64-
+CB_SUFFIX       := -cn.deb
+DEB_URL         := $(CB_BASE_URL)$(CB_VERSION).$(CB_BUILD)-$(CB_HASH)$(CB_SUFFIX)
 
 # ── AppImage config ───────────────────────────────────────────────
-LINUXDEPLOY_ARCH := $(shell uname -m)
+LINUXDEPLOY_ARCH := loongarch64
 LINUXDEPLOY_URL  := https://github.com/linuxdeploy/linuxdeploy/releases/download/continuous/linuxdeploy-$(LINUXDEPLOY_ARCH).AppImage
-APPIMAGE_OUT     := dist/codebuddy-ide-cn-$(LINUXDEPLOY_ARCH).AppImage
+APPIMAGE_OUT     := dist/codebuddy-ide-cn-loongarch64.AppImage
 # ───────────────────────────────────────────────────────────────────
 
 .PHONY: help deps download build-app appimage run-app deb rpm pacman package install clean check
@@ -21,9 +21,9 @@ APPIMAGE_OUT     := dist/codebuddy-ide-cn-$(LINUXDEPLOY_ARCH).AppImage
 help:
 	@echo "Targets:"
 	@echo "  make deps"
-	@echo "  make download              Download latest Intel x64 DMG to downloads/"
+	@echo "  make download              Download latest Linux x64 .deb to downloads/"
 	@echo "  make build-app"
-	@echo "  make build-app DMG=/path/to/CodeBuddy.dmg"
+	@echo "  make build-app DEB=/path/to/CodeBuddy.deb"
 	@echo "  make appimage              Build AppImage (requires build-app first)"
 	@echo "  make run-app"
 	@echo "  make deb"
@@ -38,10 +38,10 @@ deps:
 	bash scripts/install-deps.sh
 
 download:
-	bash scripts/download.sh "$(DMG_URL)"
+	bash scripts/download.sh "$(DEB_URL)"
 
 build-app:
-	@if [ -n "$(DMG)" ]; then bash install.sh "$(DMG)"; else bash install.sh; fi
+	@if [ -n "$(DEB)" ]; then bash install.sh "$(DEB)"; else bash install.sh; fi
 
 codebuddycn-app/start.sh:
 	$(MAKE) build-app

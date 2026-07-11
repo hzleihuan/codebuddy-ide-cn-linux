@@ -16,23 +16,15 @@ RPM_VERSION="${RPM_VERSION//-/_}"
 DESKTOP_TEMPLATE="$REPO_DIR/packaging/linux/codebuddy-ide-cn.desktop"
 SPEC_FILE="$DIST_DIR/$PACKAGE_NAME.spec"
 
-map_arch() {
-    case "$(uname -m)" in
-        x86_64) echo "x86_64" ;;
-        aarch64) echo "aarch64" ;;
-        loongarch64) echo "loongarch64" ;;
-        *) error "Unsupported RPM architecture: $(uname -m)" ;;
-    esac
-}
+ARCH="loongarch64"
 
 main() {
     [ -x "$APP_DIR/start.sh" ] || error "Missing generated app. Run make build-app first."
     require_cmd rpmbuild
 
-    local arch output_dir output_file
-    arch="$(map_arch)"
+    local output_dir output_file
     output_dir="$DIST_DIR/rpmbuild"
-    output_file="$DIST_DIR/${PACKAGE_NAME}-${RPM_VERSION}-1.${arch}.rpm"
+    output_file="$DIST_DIR/${PACKAGE_NAME}-${RPM_VERSION}-1.${ARCH}.rpm"
 
     rm -rf "$PKG_ROOT" "$output_dir"
     mkdir -p \
@@ -69,16 +61,16 @@ EOF
 Name: $PACKAGE_NAME
 Version: $RPM_VERSION
 Release: 1%{?dist}
-Summary: Unofficial local Linux conversion of CodeBuddy IDE CN
+Summary: Unofficial loong64 conversion of CodeBuddy IDE CN
 License: MIT
-BuildArch: $arch
+BuildArch: $ARCH
 Requires: gtk3, nss, libXScrnSaver, alsa-lib, libsecret, libxkbfile
 Conflicts: codebuddycn-ide, codebuddy-cn-ide
 
 %description
-This package is generated locally from a user-owned official CodeBuddy IDE CN
-macOS copy. It does not redistribute upstream software through the source
-repository.
+This package is generated locally from the official CodeBuddy IDE CN
+Linux x64 .deb package, converted to run on loong64 architecture.
+It does not redistribute upstream software through the source repository.
 
 %install
 mkdir -p %{buildroot}
@@ -92,7 +84,7 @@ $icon_files_entry
 
 %changelog
 * $changelog_date Auto Builder <builder@codebuddy.local> - $RPM_VERSION-1
-- Initial release for Fedora.
+- loong64 conversion release.
 EOF
 
     rpmbuild --define "_topdir $output_dir" --define "_build_id_links none" -bb "$SPEC_FILE" >&2

@@ -147,44 +147,44 @@ install_apt() {
     info "Detected Debian/Ubuntu (apt)"
     sudo apt-get update -qq
     sudo apt-get install -y \
-        bash ca-certificates curl unzip 7zip python3 make g++ pkg-config \
+        bash ca-certificates curl unzip python3 make g++ pkg-config \
         libx11-dev libxkbfile-dev libsecret-1-dev libkrb5-dev \
-        dpkg-dev fakeroot desktop-file-utils icnsutils imagemagick
+        dpkg-dev fakeroot desktop-file-utils
     ensure_apt_nodejs
 }
 
 install_dnf5() {
     info "Detected Fedora 41+ (dnf5)"
     sudo dnf install -y \
-        bash curl unzip 7zip python3 nodejs npm make gcc-c++ pkgconf-pkg-config \
+        bash curl unzip python3 nodejs npm make gcc-c++ pkgconf-pkg-config \
         libX11-devel libxkbfile-devel libsecret-devel krb5-devel \
-        rpm-build desktop-file-utils ImageMagick
+        rpm-build desktop-file-utils
     ensure_generic_nodejs
 }
 
 install_dnf() {
     info "Detected Fedora/RHEL (dnf)"
     sudo dnf install -y \
-        bash curl unzip 7zip python3 nodejs npm make gcc-c++ pkgconf-pkg-config \
+        bash curl unzip python3 nodejs npm make gcc-c++ pkgconf-pkg-config \
         libX11-devel libxkbfile-devel libsecret-devel krb5-devel \
-        rpm-build desktop-file-utils ImageMagick
+        rpm-build desktop-file-utils
     ensure_generic_nodejs
 }
 
 install_pacman() {
     info "Detected Arch Linux (pacman)"
     sudo pacman -S --needed --noconfirm \
-        bash curl unzip 7zip python nodejs npm base-devel zstd fakeroot \
-        libx11 libxkbfile libsecret krb5 desktop-file-utils imagemagick
+        bash curl unzip python nodejs npm base-devel zstd fakeroot \
+        libx11 libxkbfile libsecret krb5 desktop-file-utils
     ensure_generic_nodejs
 }
 
 install_zypper() {
     info "Detected openSUSE (zypper)"
     sudo zypper --non-interactive install \
-        bash curl unzip 7zip python3 nodejs-default npm-default make gcc-c++ pkg-config \
+        bash curl unzip python3 nodejs-default npm-default make gcc-c++ pkg-config \
         libX11-devel libxkbfile-devel libsecret-devel krb5-devel \
-        rpm-build desktop-file-utils ImageMagick
+        rpm-build desktop-file-utils
     ensure_generic_nodejs
 }
 
@@ -199,12 +199,12 @@ main() {
         pacman) install_pacman ;;
         zypper) install_zypper ;;
         *)
-            error "Unsupported package manager. Install bash, curl, unzip, 7z/7zz, python3, Node.js $MIN_NODE_MAJOR+, npm, npx, make, g++, X11/libxkbfile/libsecret/krb5 development headers, then re-run make build-app."
+            error "Unsupported package manager. Install bash, curl, unzip, python3, Node.js $MIN_NODE_MAJOR+, npm, npx, make, g++, X11/libxkbfile/libsecret/krb5 development headers, then re-run make build-app."
             ;;
     esac
 
     info "Dependencies are ready. Next steps:"
-    info "  make download   (or put one official Intel/x64 CodeBuddy IDE CN DMG in downloads/)"
+    info "  make download   (or put one official Linux x64 CodeBuddy IDE CN .deb in downloads/)"
     info "  make build-app"
     info "  make package    (or make appimage)"
     info "  make install"
