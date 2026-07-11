@@ -110,7 +110,7 @@ download_electron_runtime() {
         url="https://github.com/electron/electron/releases/download/v${ELECTRON_VERSION}/${zip_name}"
     fi
 
-    cache_dir="${CODEBUDDY_ELECTRON_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/codebuddy-ide-cn-linux/electron}"
+    cache_dir="${CODEBUDDY_ELECTRON_CACHE_DIR:-${XDG_CACHE_HOME:-$HOME/.cache}/codebuddy-ide-cn-loong64/electron}"
     cached_zip="$cache_dir/$zip_name"
     partial_zip="$cached_zip.part"
     mkdir -p "$cache_dir"

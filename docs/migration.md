@@ -38,7 +38,7 @@ sudo rpm -e codebuddycn-ide
 rm -rf ~/.cache/codebuddycn-ide-linux
 ```
 
-新版缓存目录为 `~/.cache/codebuddy-ide-cn-linux`，不会冲突。
+新版缓存目录为 `~/.cache/codebuddy-ide-cn-loong64`，不会冲突。
 
 ### 3. 安装新包
 
@@ -133,7 +133,7 @@ sudo rpm -e codebuddycn-ide
 rm -rf ~/.cache/codebuddycn-ide-linux
 ```
 
-新版快取目錄為 `~/.cache/codebuddy-ide-cn-linux`，不會衝突。
+新版快取目錄為 `~/.cache/codebuddy-ide-cn-loong64`，不會衝突。
 
 ### 3. 安裝新套件
 
@@ -228,7 +228,7 @@ The old Electron runtime cache is located at `~/.cache/codebuddycn-ide-linux`. Y
 rm -rf ~/.cache/codebuddycn-ide-linux
 ```
 
-The new cache directory is `~/.cache/codebuddy-ide-cn-linux`, which will not conflict.
+The new cache directory is `~/.cache/codebuddy-ide-cn-loong64`, which will not conflict.
 
 ### 3. Install the New Package
 
