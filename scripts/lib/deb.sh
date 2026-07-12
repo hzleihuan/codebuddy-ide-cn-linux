@@ -50,7 +50,7 @@ locate_app_payload() {
     local app_dir
 
     # Try common installation prefixes
-    for prefix in "opt/codebuddy-ide-cn" "opt/codebuddycn" "usr/lib/codebuddy-ide-cn"; do
+    for prefix in "opt/codebuddy-ide-cn" "opt/codebuddycn" "usr/lib/codebuddy-ide-cn" "usr/share/buddycn"; do
         if [ -d "$extracted_root/$prefix" ] && [ -f "$extracted_root/$prefix/resources/app/package.json" ]; then
             echo "$extracted_root/$prefix"
             return 0
@@ -58,7 +58,7 @@ locate_app_payload() {
     done
 
     # Fallback: search for a directory containing resources/app/package.json
-    app_dir="$(find "$extracted_root" -maxdepth 3 -type f -path "*/resources/app/package.json" -print0 2>/dev/null | head -zn 1 | xargs -0 dirname | xargs dirname | xargs dirname || true)"
+    app_dir="$(find "$extracted_root" -maxdepth 5 -type f -path "*/resources/app/package.json" -print0 2>/dev/null | head -zn 1 | xargs -0 dirname | xargs dirname | xargs dirname || true)"
     if [ -n "$app_dir" ]; then
         echo "$app_dir"
         return 0

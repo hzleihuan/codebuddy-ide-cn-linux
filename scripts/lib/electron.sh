@@ -86,6 +86,20 @@ download_electron_runtime() {
     if [ -n "${ELECTRON_LOCAL_ZIP:-}" ]; then
         [ -f "$ELECTRON_LOCAL_ZIP" ] || error "ELECTRON_LOCAL_ZIP not found: $ELECTRON_LOCAL_ZIP"
         info "Using local Electron zip: $ELECTRON_LOCAL_ZIP"
+
+        # Extract version from zip filename so native-module rebuild targets
+        # the correct Electron headers (e.g. electron-v37.2.5-linux-loong64.zip → 37.2.5)
+        local local_zip_name="${ELECTRON_LOCAL_ZIP##*/}"
+        if [[ "$local_zip_name" =~ ^electron-v([0-9]+\.[0-9]+\.[0-9]+)- ]]; then
+            local local_version="${BASH_REMATCH[1]}"
+            if [ "$local_version" != "$ELECTRON_VERSION" ]; then
+                info "Syncing ELECTRON_VERSION $ELECTRON_VERSION → $local_version (from zip filename)"
+                ELECTRON_VERSION="$local_version"
+            fi
+        else
+            warn "Cannot extract version from ELECTRON_LOCAL_ZIP filename; native rebuild will use $ELECTRON_VERSION"
+        fi
+
         unzip -qo "$ELECTRON_LOCAL_ZIP" -d "$INSTALL_DIR"
         [ -x "$INSTALL_DIR/electron" ] || error "Electron binary was not extracted from $ELECTRON_LOCAL_ZIP"
         return 0
