@@ -110,6 +110,25 @@ EOF
     chmod +x "$INSTALL_DIR/start.sh"
 }
 
+write_icon() {
+    local app_dir="$1"
+    local src="$app_dir/resources/app/out/media/mascot-new.png"
+    local dst="$INSTALL_DIR/.codebuddycn-linux/codebuddycn.png"
+
+    [ -f "$src" ] || { warn "No icon source found at $src"; return 0; }
+
+    mkdir -p "$INSTALL_DIR/.codebuddycn-linux"
+
+    info "Generating app icon (256x256) from mascot"
+    python3 -c "
+from PIL import Image
+img = Image.open('$src')
+img.thumbnail((256, 256), Image.LANCZOS)
+img.save('$dst', 'PNG')
+" || { warn "Failed to generate icon with PIL, trying ImageMagick"; \
+    convert "$src" -resize 256x256 "$dst" 2>/dev/null || warn "Failed to generate app icon"; }
+}
+
 write_desktop_entry() {
     mkdir -p "$INSTALL_DIR/.codebuddycn-linux"
     cat > "$INSTALL_DIR/.codebuddycn-linux/$APP_ID.desktop" <<EOF
@@ -166,6 +185,7 @@ main() {
     prepare_install_dir
     download_electron_runtime
     copy_app_payload "$app_dir"
+    write_icon "$app_dir"
     rebuild_native_modules "$INSTALL_DIR/resources/app"
     write_launcher
     write_desktop_entry
