@@ -112,21 +112,15 @@ EOF
 
 write_icon() {
     local app_dir="$1"
-    local src="$app_dir/resources/app/out/media/mascot-new.png"
+    # The official .deb ships the app icon at usr/share/pixmaps/buddycn.png
+    local src="$(dirname "$app_dir")/pixmaps/buddycn.png"
     local dst="$INSTALL_DIR/.codebuddycn-linux/codebuddycn.png"
 
     [ -f "$src" ] || { warn "No icon source found at $src"; return 0; }
 
     mkdir -p "$INSTALL_DIR/.codebuddycn-linux"
-
-    info "Generating app icon (256x256) from mascot"
-    python3 -c "
-from PIL import Image
-img = Image.open('$src')
-img.thumbnail((256, 256), Image.LANCZOS)
-img.save('$dst', 'PNG')
-" || { warn "Failed to generate icon with PIL, trying ImageMagick"; \
-    convert "$src" -resize 256x256 "$dst" 2>/dev/null || warn "Failed to generate app icon"; }
+    info "Copying app icon from $src"
+    cp "$src" "$dst"
 }
 
 write_desktop_entry() {
