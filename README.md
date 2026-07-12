@@ -213,93 +213,93 @@ FORCE_ELECTRON_VERSION=35.4.0 make build-app
 
 更新后显示发行说明
 
-升级上游 VS Code 基线从 1.102 至 1.106（Electron 37 / Chromium 138）
-新增源代码管理（SCM）支持 Git Worktree 管理功能
-新增模型思考强度选择与思考模式开关
-新增模型响应状态提示体系
-新增高亮内置和自定义的危险命令，并差异化危险命令确认框
-新增设置页滚动定位并高亮 Command Security 分组
-新增对话框拖拽文件添加能力
-新增 IDE 输入框接入 Skills 和新建自定义模型
-新增对话面板内联搜索功能
-新增切换聊天 Tab 后恢复到切走前的滚动位置
-新增终端命令静默执行模式
-新增 autoRun 配置项并支持持久化
-新增 MCP 云端托管 OAuth 授权，信任连接的客户端为 CodeBuddy 应用
-新增 SubAgents 子代理状态指示器
-新增支持 Remote SSH 远程连接 macOS
-新增 自定义模型 Token Plan 多套餐及模型配置同步
-新增工作区名置于窗口标题最前，优化多窗口区分体验
-新增 AskUserQuestion 选项支持自定义输入
-新增无项目时的空状态引导
-新增编辑后自动弹 Diff 开关
-新增 md/html 文件默认进入源码模式
-优化 Agent 消息区域渲染，提高首屏速度
-优化 Chat 面板预热速度，内置扩展按需激活
-优化历史对话列表按最后活跃时间实时置顶
-优化「历史提问」入口位置与图标
-优化子代理状态指示器交互和 UI
-优化 Team 模式子代理指示器展示
-优化 replace_in_file 工具失败错误提示和样式
-优化 write_to_file 工具提示词与参数错误重试指引
-优化斜杠命令面板默认选中项按优先级挑选
-优化 Remote-SSH 连接超时降级与错误提示
-优化会话大屏自适应宽度与表格列宽渲染
-移除 Agents 页面简洁模式
-修复 Remote SSH 场景下特定 glibc 版本会出现文件变更不会实时显示问题
-修复 Remote SSH 扩展宿主 CPU 100% 的问题
-修复 Remote SSH exec-zsh 主机上 code-server 安装失败
-修复 Remote SSH jumpserver 重复 OTP 的问题
-修复 Remote SSH socket 监听模式连接失败
-修复 Remote SSH mux 转发远程连接卡死
-修复 Remote SSH parseKey 异常时误弹 passphrase 输入框
-修复 WSL 连接时 server 下载地址 404
-修复 Remote-SSH 下 SCM 初始扫描卡住的问题
-修复远程连接后文件树未恢复的问题
-修复 SSH 远程下打开 Dev Container 失败的问题
-修复 exthost 关窗后 CPU 100% 卡死不退出的问题
-修复远程 Extension Host 长时间运行后 hang 的问题
-修复 Extension Host 日志压力及 checkpoint OOM 风险
-修复远程工作区大文件搜索导致 Extension Host 无响应
-修复扩展宿主崩溃后 Agent 会话状态与「打开 agent」按钮恢复
-修复启动期渲染进程崩溃自动恢复
-修复多窗口 webview 常驻及会话订阅未释放导致的大规模内存泄漏
-修复 Dev Container 崩溃及新建对话 RPC 未就绪的问题
-修复自定义模型缓存 token 显示问题
-修复自定义模型 gpt-5.x 请求 max_tokens 参数报错
-修复自定义模型 temperature 参数兼容性
-修复自定义模型出文前报错导致 Agents 侧界面空白
-修复自定义模型流式解析与 temperature 参数异常
-修复 models.json 的 availableModels 白名单配置在有后台配置时无效问题
-修复向上滚动加载历史时的闪跳
-修复历史对话面板特定情况下误显示「暂无历史记录」
-修复历史提问跳转到靠前消息定位失效/白屏
-修复复制按钮未排除深度思考内容
-修复模型提问浮层遮挡输出与文件修改列表
-修复模型回复结束态 footer 与 Token 闪现问题
-修复对话中内联 SVG 矢量图渲染
-修复输入框过长时底部工具栏被遮挡的问题
-修复输入框提示横幅位置错位问题
-修复对话状态卡死的问题
-修复消息滚动闪烁问题
-修复 RPC 返回异常引发的灰屏问题
-修复 Plan 模式任务清单进度卡在 1/n 的问题
-修复 Plan 模式查看计划响应异常
-修复会话结束后任务列表 UI 虚假显示「正在执行中」
-修复子 Agent 权限确认卡死及需点两次确认的问题
-修复重复触发的自动化任务未聚合到同一会话
-修复自动化删除弹窗长名称溢出问题
-修复自动化任务循环执行卡住的问题
-修复多对话 Tab 切换卡顿及尾部 Tab 被裁剪
-修复 Windows 下 mainCmd 大小写变体未覆盖的问题
-修复 macOS 只读位置运行导致的自动更新死循环
-修复 PowerShell 执行命令 banner 乱码问题
-修复 MCP 工具审批菜单缺失导致对话假死
-修复 MCP OAuth 未兼容手动配置的 Authorization header
-修复内容过滤时未清除已渲染的 assistant 消息及工具调用
-修复 Mermaid 渲染样式与稳定性
-修复 Agents 模式复制按钮文本重复两遍
-修复 Agents Widget 白屏/灰屏崩溃问题
-修复内置浏览器按钮点击无反应
-修复 AI 改动文件审阅状态重启后丢失的问题
-修复多工作区下引用代码块点击无反应的问题
+- 升级上游 VS Code 基线从 1.102 至 1.106（Electron 37 / Chromium 138）
+- 新增源代码管理（SCM）支持 Git Worktree 管理功能
+- 新增模型思考强度选择与思考模式开关
+- 新增模型响应状态提示体系
+- 新增高亮内置和自定义的危险命令，并差异化危险命令确认框
+- 新增设置页滚动定位并高亮 Command Security 分组
+- 新增对话框拖拽文件添加能力
+- 新增 IDE 输入框接入 Skills 和新建自定义模型
+- 新增对话面板内联搜索功能
+- 新增切换聊天 Tab 后恢复到切走前的滚动位置
+- 新增终端命令静默执行模式
+- 新增 autoRun 配置项并支持持久化
+- 新增 MCP 云端托管 OAuth 授权，信任连接的客户端为 CodeBuddy 应用
+- 新增 SubAgents 子代理状态指示器
+- 新增支持 Remote SSH 远程连接 macOS
+- 新增 自定义模型 Token Plan 多套餐及模型配置同步
+- 新增工作区名置于窗口标题最前，优化多窗口区分体验
+- 新增 AskUserQuestion 选项支持自定义输入
+- 新增无项目时的空状态引导
+- 新增编辑后自动弹 Diff 开关
+- 新增 md/html 文件默认进入源码模式
+- 优化 Agent 消息区域渲染，提高首屏速度
+- 优化 Chat 面板预热速度，内置扩展按需激活
+- 优化历史对话列表按最后活跃时间实时置顶
+- 优化「历史提问」入口位置与图标
+- 优化子代理状态指示器交互和 UI
+- 优化 Team 模式子代理指示器展示
+- 优化 replace_in_file 工具失败错误提示和样式
+- 优化 write_to_file 工具提示词与参数错误重试指引
+- 优化斜杠命令面板默认选中项按优先级挑选
+- 优化 Remote-SSH 连接超时降级与错误提示
+- 优化会话大屏自适应宽度与表格列宽渲染
+- 移除 Agents 页面简洁模式
+- 修复 Remote SSH 场景下特定 glibc 版本会出现文件变更不会实时显示问题
+- 修复 Remote SSH 扩展宿主 CPU 100% 的问题
+- 修复 Remote SSH exec-zsh 主机上 code-server 安装失败
+- 修复 Remote SSH jumpserver 重复 OTP 的问题
+- 修复 Remote SSH socket 监听模式连接失败
+- 修复 Remote SSH mux 转发远程连接卡死
+- 修复 Remote SSH parseKey 异常时误弹 passphrase 输入框
+- 修复 WSL 连接时 server 下载地址 404
+- 修复 Remote-SSH 下 SCM 初始扫描卡住的问题
+- 修复远程连接后文件树未恢复的问题
+- 修复 SSH 远程下打开 Dev Container 失败的问题
+- 修复 exthost 关窗后 CPU 100% 卡死不退出的问题
+- 修复远程 Extension Host 长时间运行后 hang 的问题
+- 修复 Extension Host 日志压力及 checkpoint OOM 风险
+- 修复远程工作区大文件搜索导致 Extension Host 无响应
+- 修复扩展宿主崩溃后 Agent 会话状态与「打开 agent」按钮恢复
+- 修复启动期渲染进程崩溃自动恢复
+- 修复多窗口 webview 常驻及会话订阅未释放导致的大规模内存泄漏
+- 修复 Dev Container 崩溃及新建对话 RPC 未就绪的问题
+- 修复自定义模型缓存 token 显示问题
+- 修复自定义模型 gpt-5.x 请求 max_tokens 参数报错
+- 修复自定义模型 temperature 参数兼容性
+- 修复自定义模型出文前报错导致 Agents 侧界面空白
+- 修复自定义模型流式解析与 temperature 参数异常
+- 修复 models.json 的 availableModels 白名单配置在有后台配置时无效问题
+- 修复向上滚动加载历史时的闪跳
+- 修复历史对话面板特定情况下误显示「暂无历史记录」
+- 修复历史提问跳转到靠前消息定位失效/白屏
+- 修复复制按钮未排除深度思考内容
+- 修复模型提问浮层遮挡输出与文件修改列表
+- 修复模型回复结束态 footer 与 Token 闪现问题
+- 修复对话中内联 SVG 矢量图渲染
+- 修复输入框过长时底部工具栏被遮挡的问题
+- 修复输入框提示横幅位置错位问题
+- 修复对话状态卡死的问题
+- 修复消息滚动闪烁问题
+- 修复 RPC 返回异常引发的灰屏问题
+- 修复 Plan 模式任务清单进度卡在 1/n 的问题
+- 修复 Plan 模式查看计划响应异常
+- 修复会话结束后任务列表 UI 虚假显示「正在执行中」
+- 修复子 Agent 权限确认卡死及需点两次确认的问题
+- 修复重复触发的自动化任务未聚合到同一会话
+- 修复自动化删除弹窗长名称溢出问题
+- 修复自动化任务循环执行卡住的问题
+- 修复多对话 Tab 切换卡顿及尾部 Tab 被裁剪
+- 修复 Windows 下 mainCmd 大小写变体未覆盖的问题
+- 修复 macOS 只读位置运行导致的自动更新死循环
+- 修复 PowerShell 执行命令 banner 乱码问题
+- 修复 MCP 工具审批菜单缺失导致对话假死
+- 修复 MCP OAuth 未兼容手动配置的 Authorization header
+- 修复内容过滤时未清除已渲染的 assistant 消息及工具调用
+- 修复 Mermaid 渲染样式与稳定性
+- 修复 Agents 模式复制按钮文本重复两遍
+- 修复 Agents Widget 白屏/灰屏崩溃问题
+- 修复内置浏览器按钮点击无反应
+- 修复 AI 改动文件审阅状态重启后丢失的问题
+- 修复多工作区下引用代码块点击无反应的问题
