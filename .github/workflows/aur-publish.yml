@@ -106,3 +106,29 @@ jobs:
             git commit -m "Update to v${CB_VERSION}.${CB_BUILD} (Helper commit: ${{ github.sha }})"
             git push origin master
           fi
+
+  test-aur-install:
+    name: Test Live AUR Installation
+    needs: aur-publish
+    runs-on: ubuntu-latest
+    container:
+      image: archlinux:base-devel
+    steps:
+      - name: Install Git, Sudo, and Pacman utilities
+        run: |
+          pacman -Syu --noconfirm git sudo
+
+      - name: Create non-root user for makepkg
+        run: |
+          useradd -m builder
+          echo "builder ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+      - name: Clone Live AUR Repository
+        run: |
+          su builder -c "git clone https://aur.archlinux.org/codebuddy-ide-cn.git /home/builder/aur-repo"
+
+      - name: Build and Install from AUR
+        run: |
+          cd /home/builder/aur-repo
+          su builder -c "makepkg -si --noconfirm"
+

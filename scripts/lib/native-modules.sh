@@ -51,6 +51,17 @@ refresh_npm_package() {
     info "Refreshing platform package $package_name@$version"
     (
         cd "$build_dir"
+        # Sanitize env variables to prevent npm from throwing ERR_INVALID_URL
+        for val in npm_config_disturl NPM_CONFIG_DISTURL; do
+            unset "$val"
+        done
+        for val in npm_config_proxy npm_config_https_proxy NPM_CONFIG_PROXY NPM_CONFIG_HTTPS_PROXY; do
+            var_val="${!val:-}"
+            if [ -z "$var_val" ] || [ "$var_val" = "undefined" ] || [ "$var_val" = "null" ]; then
+                unset "$val"
+            fi
+        done
+
         npm init -y >/dev/null 2>&1
         npm install "$package_name@$version" --no-audit --no-fund
     )
@@ -117,6 +128,17 @@ build_native_module_fresh() {
     (
         cd "$build_dir"
         echo '{"private":true}' > package.json
+
+        # Sanitize env variables to prevent npm from throwing ERR_INVALID_URL
+        for val in npm_config_disturl NPM_CONFIG_DISTURL; do
+            unset "$val"
+        done
+        for val in npm_config_proxy npm_config_https_proxy NPM_CONFIG_PROXY NPM_CONFIG_HTTPS_PROXY; do
+            var_val="${!val:-}"
+            if [ -z "$var_val" ] || [ "$var_val" = "undefined" ] || [ "$var_val" = "null" ]; then
+                unset "$val"
+            fi
+        done
 
         # Install Electron (headers only, skip the full download)
         npm install "electron@$ELECTRON_VERSION" --save-dev --ignore-scripts --no-audit --no-fund 2>&1 >/dev/null
