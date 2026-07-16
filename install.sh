@@ -5,25 +5,31 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 APP_ID="${CODEBUDDY_APP_ID:-codebuddy-ide-cn}"
 APP_DISPLAY_NAME="${CODEBUDDY_APP_DISPLAY_NAME:-CodeBuddy CN}"
 INSTALL_DIR="${CODEBUDDY_INSTALL_DIR:-$SCRIPT_DIR/codebuddycn-app}"
+ELECTRON_VERSION="${ELECTRON_VERSION:-37.7.0}"
+ELECTRON_HEADERS_URL="${ELECTRON_HEADERS_URL:-${npm_config_disturl:-${NPM_CONFIG_DISTURL:-https://artifacts.electronjs.org/headers/dist}}}"
+ELECTRON_MIRROR="${ELECTRON_MIRROR:-}"
 WORK_DIR="$(mktemp -d)"
+ARCH="$(uname -m)"
 PROVIDED_INPUT=""
 FRESH=0
 
 . "$SCRIPT_DIR/scripts/lib/common.sh"
 . "$SCRIPT_DIR/scripts/lib/deb.sh"
+. "$SCRIPT_DIR/scripts/lib/electron.sh"
 . "$SCRIPT_DIR/scripts/lib/native-modules.sh"
-
-ELECTRON_HEADERS_URL="${ELECTRON_HEADERS_URL:-${npm_config_disturl:-${NPM_CONFIG_DISTURL:-https://artifacts.electronjs.org/headers/dist}}}"
 
 usage() {
     cat <<'HELP'
-Usage: ./install.sh [--fresh] [path/to/codebuddy.deb]
+Usage: ./install.sh [--fresh] [path/to/CodeBuddy.deb]
 
-Builds a local Linux CodeBuddy app by extracting the official CodeBuddy Linux DEB package.
-With no path, the installer expects exactly one official DEB in downloads/.
+Builds a loong64 Linux Electron app from the official CodeBuddy IDE CN
+Linux x64 .deb package.  With no path, the installer expects exactly one
+official .deb in downloads/.
 
 Environment:
   CODEBUDDY_INSTALL_DIR   Output app directory (default: ./codebuddycn-app)
+  ELECTRON_MIRROR         Optional Electron runtime mirror
+  ELECTRON_HEADERS_URL    Electron headers dist URL for native rebuilds
 HELP
 }
 
@@ -53,6 +59,8 @@ parse_args() {
 check_deps() {
     require_cmd tar
     require_cmd ar
+    require_cmd curl
+    require_cmd unzip
     require_cmd node
     require_cmd npm
     require_cmd npx
@@ -73,8 +81,11 @@ copy_app_payload() {
 
     [ -d "$app_payload" ] || error "Missing app payload in DEB: $app_payload"
 
-    info "Copying CodeBuddy app payload to $INSTALL_DIR"
-    cp -a "$app_payload/." "$INSTALL_DIR/"
+    # Only copy resources/app — the x64 Electron binary is not usable on loong64
+    [ -d "$app_payload/resources/app" ] || error "Missing resources/app in DEB payload"
+    info "Copying CodeBuddy app payload (resources/app only)"
+    mkdir -p "$INSTALL_DIR/resources"
+    cp -a "$app_payload/resources/app" "$INSTALL_DIR/resources/app"
 }
 
 write_icon() {
@@ -106,10 +117,15 @@ set -euo pipefail
 
 APP_DIR="\$(cd "\$(dirname "\${BASH_SOURCE[0]}")" && pwd)"
 export CHROME_DESKTOP="${APP_ID}.desktop"
-export ELECTRON_DISABLE_SANDBOX=1
+export ELECTRON_FORCE_IS_PACKAGED=1
 
-# Run the official launcher script
-exec "\$APP_DIR/bin/buddycn" "\$@"
+exec "\$APP_DIR/electron" \\
+  --no-sandbox \\
+  --disable-dev-shm-usage \\
+  --disable-gpu-sandbox \\
+  --ozone-platform-hint=auto \\
+  --enable-wayland-ime \\
+  "\$@"
 EOF
     chmod +x "$INSTALL_DIR/start.sh"
 }
@@ -144,6 +160,8 @@ write_build_metadata() {
   "appId": "$APP_ID",
   "displayName": "$APP_DISPLAY_NAME",
   "upstreamVersion": "$version",
+  "electronVersion": "$ELECTRON_VERSION",
+  "arch": "loong64",
   "generatedAt": "$(date -u +%Y-%m-%dT%H:%M:%SZ)"
 }
 EOF
@@ -165,9 +183,17 @@ main() {
     extract_deb_payload "$input_deb" "$deb_root"
     copy_app_payload "$deb_root"
 
-    # Rebuild native modules if missing (like node-pty)
-    ELECTRON_VERSION="$(cat "$INSTALL_DIR/resources/app/package.json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('electronVersion', d.get('devDependencies',{}).get('electron','N/A')))" 2>/dev/null)"
+    # Detect Electron version from the app payload
+    if [ -n "${FORCE_ELECTRON_VERSION:-}" ]; then
+        ELECTRON_VERSION="$FORCE_ELECTRON_VERSION"
+        info "Using forced Electron version: $ELECTRON_VERSION"
+    else
+        ELECTRON_VERSION="$(cat "$INSTALL_DIR/resources/app/package.json" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('electronVersion', d.get('devDependencies',{}).get('electron','N/A')))" 2>/dev/null)"
+    fi
+    info "Using Electron: $ELECTRON_VERSION"
     export ELECTRON_VERSION
+
+    download_electron_runtime
     rebuild_native_modules "$INSTALL_DIR/resources/app"
 
     write_icon "$deb_root"

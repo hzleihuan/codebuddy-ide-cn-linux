@@ -1,9 +1,9 @@
-# Maintainer: Zeongit J. <https://github.com/JipZeonGit/codebuddy-ide-cn-linux/issues>
+# Maintainer: hzleihuan <https://github.com/hzleihuan/codebuddy-ide-cn-loong64/issues>
 #
 # This PKGBUILD is licensed under the MIT License.
-# It contains no proprietary code; it only orchestrates the download,
-# extraction, and packaging of upstream binaries that the end user
-# fetches directly from Tencent's official CDN at install time.
+# It converts the official CodeBuddy IDE CN x64 .deb to run on loong64
+# (LoongArch 64-bit) Linux by downloading a matching loong64 Electron
+# runtime and rebuilding native Node modules from source.
 #
 # The packaged software (Tencent CodeBuddy IDE) remains subject to
 # Tencent's proprietary CodeBuddy service license, NOT this MIT notice.
@@ -14,9 +14,9 @@ _cb_build=33158423
 _cb_hash=3ad58bcb
 pkgver="${_cb_ver}.${_cb_build}"
 pkgrel=1
-pkgdesc='腾讯云代码助手CodeBuddy IDE，是一款辅助编码工具。'
-arch=('x86_64')
-url='https://github.com/JipZeonGit/codebuddy-ide-cn-linux'
+pkgdesc='腾讯云代码助手CodeBuddy IDE（loong64非官方移植版）'
+arch=('loongarch64')
+url='https://github.com/hzleihuan/codebuddy-ide-cn-loong64'
 license=('LicenseRef-Tencent-CodeBuddy')
 
 depends=(
@@ -32,7 +32,7 @@ optdepends=(
 )
 
 makedepends=(
-    'curl' 'python' 'nodejs' 'npm'
+    'curl' 'unzip' 'python' 'nodejs' 'npm'
     'gcc' 'make' 'pkgconf' 'imagemagick' 'binutils'
 )
 
@@ -42,11 +42,11 @@ options=('!strip' '!debug')
 
 # Helper repository pinned to a specific commit so the conversion
 # logic is reproducible. Bump together with pkgver if needed.
-_helper_commit='1e9ff906e5792c3008ea6b45a0555ec0e6a97462'
+_helper_commit='0996bb8b33a85e42aed20bcd0cfa8b9f2626ab50'
 
 source=(
     "codebuddy-cn_${pkgver}_amd64.deb::https://download.codebuddy.cn/aiide/linux-x64/CodeBuddy-linux-x64-${pkgver}-${_cb_hash}-cn.deb"
-    "codebuddy-ide-cn-linux-${_helper_commit}.tar.gz::${url}/archive/${_helper_commit}.tar.gz"
+    "codebuddy-ide-cn-loong64-${_helper_commit}.tar.gz::${url}/archive/${_helper_commit}.tar.gz"
     'LICENSE.notice'
 )
 
@@ -58,11 +58,11 @@ noextract=(
 sha256sums=(
     '838fe89a19f2cac23c02aab67bf5cb34e613323cd47cb811588a3d90d4fe4398'
     'SKIP'
-    'b3260549a765c478dc33680c7b9a1a30e5a038456e340d6d25f7748390724241'
+    'SKIP'
 )
 
 prepare() {
-    local helper_dir="${srcdir}/codebuddy-ide-cn-linux-${_helper_commit}"
+    local helper_dir="${srcdir}/codebuddy-ide-cn-loong64-${_helper_commit}"
 
     [ -f "${helper_dir}/install.sh" ] || {
         echo "ERROR: helper repo not extracted at ${helper_dir}" >&2
@@ -71,7 +71,7 @@ prepare() {
 }
 
 build() {
-    local helper_dir="${srcdir}/codebuddy-ide-cn-linux-${_helper_commit}"
+    local helper_dir="${srcdir}/codebuddy-ide-cn-loong64-${_helper_commit}"
     local deb_path="${srcdir}/codebuddy-cn_${pkgver}_amd64.deb"
     local out_dir="${srcdir}/build/${pkgname}"
 
@@ -90,7 +90,7 @@ build() {
 }
 
 package() {
-    local helper_dir="${srcdir}/codebuddy-ide-cn-linux-${_helper_commit}"
+    local helper_dir="${srcdir}/codebuddy-ide-cn-loong64-${_helper_commit}"
     local out_dir="${srcdir}/build/${pkgname}"
 
     # 1) App payload under /opt/$pkgname.

@@ -11,7 +11,7 @@ APP_DIR="${APP_DIR:-$REPO_DIR/codebuddycn-app}"
 DIST_DIR="${DIST_DIR:-$REPO_DIR/dist}"
 PACKAGE_NAME="${PACKAGE_NAME:-codebuddy-ide-cn}"
 DESKTOP_TEMPLATE="$REPO_DIR/packaging/linux/codebuddy-ide-cn.desktop"
-OUTPUT="${APPIMAGE_OUT:-$DIST_DIR/${PACKAGE_NAME}-x86_64.AppImage}"
+OUTPUT="${APPIMAGE_OUT:-$DIST_DIR/${PACKAGE_NAME}-loongarch64.AppImage}"
 WORK_DIR="$(mktemp -d)"
 
 main() {

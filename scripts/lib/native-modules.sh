@@ -1,10 +1,10 @@
 #!/bin/bash
-# Native Node module rebuilds for the copied VS Code/Electron payload.
+# Native Node module rebuilds for the CodeBuddy app payload.
 #
-# The macOS DMG ships pre-compiled native modules without source code
-# (no binding.gyp / src/).  Running @electron/rebuild on them is a no-op.
-# Instead we download each module's full source from npm, rebuild it for
-# the target Linux Electron, and copy the result back into the app.
+# The official Linux x64 .deb ships pre-compiled native modules for x86_64.
+# To run on loong64, we must rebuild them from source against the loong64
+# Electron headers.  We download each module's full source from npm, rebuild
+# it for the target Electron, and copy the result back into the app.
 
 native_module_report() {
     local app_dir="$1"
@@ -110,9 +110,9 @@ read_module_version() {
 # ---------------------------------------------------------------------------
 # build_native_module_fresh  –  npm-install from source, rebuild, copy back
 #
-# Because the macOS payload only ships pre-built binaries (no binding.gyp,
-# no src/), we must obtain a *full* source distribution from npm and compile
-# it against the target Electron.
+# Because the x64 .deb only ships pre-built x86_64 binaries (possibly without
+# binding.gyp / src/), we obtain a *full* source distribution from npm and
+# compile it against the target loong64 Electron.
 # ---------------------------------------------------------------------------
 build_native_module_fresh() {
     local app_dir="$1"
@@ -197,14 +197,9 @@ rebuild_native_modules() {
     native_module_report "$app_dir" >&2
     remove_known_wrong_platform_modules "$app_dir"
 
-    # Only refresh platform packages if they are missing compiled native binaries
-    local has_watcher
-    has_watcher=$(find "$app_dir/node_modules/@parcel/watcher" -name "*.node" 2>/dev/null | head -1)
-    if [ -z "$has_watcher" ]; then
-        refresh_platform_packages "$app_dir"
-    else
-        info "Platform package @parcel/watcher already has native binary, skipping refresh"
-    fi
+    # On loong64 we always refresh platform packages — the x64 .deb ships
+    # x86_64 binaries that won't run.
+    refresh_platform_packages "$app_dir"
 
     # ------------------------------------------------------------------
     # Collect versions of native modules that need a from-source rebuild
@@ -230,22 +225,14 @@ rebuild_native_modules() {
     info "Rebuilding native modules for Electron $ELECTRON_VERSION"
     info "Using Electron headers: $ELECTRON_HEADERS_URL"
 
-    # Build critical modules (fail on error)
+    # Build critical modules (fail on error).
+    # Always rebuild — .deb ships x86_64 .node files unusable on loong64.
     for module_name in "${critical_modules[@]}"; do
         module_version="$(read_module_version "$app_dir" "$module_name" 2>/dev/null || true)"
         if [ -z "$module_version" ]; then
             warn "Module $module_name not found in app; skipping"
             continue
         fi
-
-        # Skip rebuild if native binaries already exist
-        local has_node
-        has_node=$(find "$app_dir/node_modules/$module_name" -name "*.node" 2>/dev/null | head -1)
-        if [ -n "$has_node" ]; then
-            info "Module $module_name already has precompiled binary ($has_node), skipping rebuild"
-            continue
-        fi
-
         build_native_module_fresh "$app_dir" "$module_name" "$module_version" 0
     done
 
@@ -256,15 +243,6 @@ rebuild_native_modules() {
             warn "Module $module_name not found in app; skipping"
             continue
         fi
-
-        # Skip rebuild if native binaries already exist
-        local has_node
-        has_node=$(find "$app_dir/node_modules/$module_name" -name "*.node" 2>/dev/null | head -1)
-        if [ -n "$has_node" ]; then
-            info "Module $module_name already has precompiled binary ($has_node), skipping rebuild"
-            continue
-        fi
-
         build_native_module_fresh "$app_dir" "$module_name" "$module_version" 1
     done
 

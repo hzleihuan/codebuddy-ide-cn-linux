@@ -15,21 +15,14 @@ PACMAN_VERSION="${PACKAGE_VERSION//+/_}"
 PACMAN_VERSION="${PACMAN_VERSION//-/_}"
 DESKTOP_TEMPLATE="$REPO_DIR/packaging/linux/codebuddy-ide-cn.desktop"
 
-map_arch() {
-    case "$(uname -m)" in
-        x86_64) echo "x86_64" ;;
-        aarch64) echo "aarch64" ;;
-        *) error "Unsupported pacman architecture: $(uname -m)" ;;
-    esac
-}
+ARCH="loongarch64"
 
 main() {
     [ -x "$APP_DIR/start.sh" ] || error "Missing generated app. Run make build-app first."
     require_cmd makepkg
 
-    local arch output_file source_root
-    arch="$(map_arch)"
-    output_file="$DIST_DIR/${PACKAGE_NAME}-${PACMAN_VERSION}-1-${arch}.pkg.tar.zst"
+    local output_file source_root
+    output_file="$DIST_DIR/${PACKAGE_NAME}-${PACMAN_VERSION}-1-${ARCH}.pkg.tar.zst"
     source_root="$PKG_WORK/src/app"
 
     rm -rf "$PKG_WORK"
@@ -47,8 +40,8 @@ main() {
 pkgname=$PACKAGE_NAME
 pkgver=$PACMAN_VERSION
 pkgrel=1
-pkgdesc='Unofficial local Linux repackaging of CodeBuddy IDE CN'
-arch=('$arch')
+pkgdesc='Unofficial loong64 conversion of CodeBuddy IDE CN'
+arch=('$ARCH')
 license=('MIT')
 depends=('gtk3' 'nss' 'libxss' 'alsa-lib' 'libsecret' 'libxkbfile')
 conflicts=('codebuddycn-ide' 'codebuddy-cn-ide')
