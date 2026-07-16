@@ -42,7 +42,7 @@ options=('!strip' '!debug')
 
 # Helper repository pinned to a specific commit so the conversion
 # logic is reproducible. Bump together with pkgver if needed.
-_helper_commit='0996bb8b33a85e42aed20bcd0cfa8b9f2626ab50'
+_helper_commit='3312ed3799f9c3374f9aca8b0ac810d5915b8845'
 
 source=(
     "codebuddy-cn_${pkgver}_amd64.deb::https://download.codebuddy.cn/aiide/linux-x64/CodeBuddy-linux-x64-${pkgver}-${_cb_hash}-cn.deb"
